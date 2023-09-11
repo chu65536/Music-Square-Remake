@@ -9,7 +9,7 @@ Game::Game() {
     window_.create(sf::VideoMode(500u, 500u), "Title");
     window_.setKeyRepeatEnabled(false);
     ImGui::SFML::Init(window_);
-    currentState_ = new MenuState;
+    currentState_ = std::make_unique<MenuState>();
 }
 
 void Game::HandleEvents(sf::Event& event) {
@@ -24,15 +24,13 @@ void Game::HandleEvents(sf::Event& event) {
 void Game::UpdateState(State::Type type) {
     if (type == currentState_->getType()) return;
     
-    std::cout << "deleted, allocating new state" << std::endl;
-    delete currentState_;
-    switch (type)
-    {
+    std::cout << "creating new state!" << std::endl; 
+    switch (type) {
     case State::Type::Menu:
-        currentState_ = new MenuState;
+        currentState_ = std::make_unique<MenuState>();
         break;
     case State::Type::Play:
-        currentState_ = new PlayState;
+        currentState_ = std::make_unique<PlayState>();
         break;
     }
 }

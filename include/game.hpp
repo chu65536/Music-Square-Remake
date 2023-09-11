@@ -12,5 +12,5 @@ public:
     void UpdateState(State::Type);
 private:
     sf::RenderWindow window_;
-    State* currentState_;
+    std::unique_ptr<State> currentState_;
 };

@@ -8,9 +8,9 @@ class Game {
 public:
     Game();
     void Run();
-
+    void HandleEvents(sf::Event&);
+    void UpdateState(State::Type);
 private:
     sf::RenderWindow window_;
-    Conductor conductor_;
     State* currentState_;
 };

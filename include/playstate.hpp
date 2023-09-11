@@ -2,9 +2,9 @@
 
 #include "state.hpp"
 
-class MenuState : public State {
+class PlayState : public State {
 public:
-    MenuState();
+    PlayState();
     State::Type update() override;
     void render(sf::RenderWindow&) override;
     State::Type getType() const override;

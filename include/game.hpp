@@ -8,9 +8,9 @@ class Game {
 public:
     Game();
     void Run();
-    void HandleEvents(sf::Event&);
-    void UpdateState(State::Type);
 private:
+    void handleGlobalEvents();
+    void updateState(State::Type);
     sf::RenderWindow window_;
     std::unique_ptr<State> currentState_;
 };

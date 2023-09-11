@@ -6,17 +6,19 @@
 
 MenuState::MenuState() = default;
 
-State::Type MenuState::getType() const { return State::Type::Menu; }
+State::Type MenuState::GetType() const { return State::Type::Menu; }
 
-State::Type MenuState::update() {
+void MenuState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
+}
+
+State::Type MenuState::Update() {
     if (ImGui::Button("Play", ImVec2(300.f, 100.f)))
         return State::Type::Play;
 
     return State::Type::Menu;
 }
 
-void MenuState::render(sf::RenderWindow& window) {
-    std::cout << "rendering menu!" << std::endl;
+void MenuState::Render(sf::RenderWindow& window) {
     window.clear(); 
     ImGui::SFML::Render(window);
     window.display();

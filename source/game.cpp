@@ -9,22 +9,35 @@ Game::Game() {
     window_.create(sf::VideoMode(500u, 500u), "Title");
     window_.setKeyRepeatEnabled(false);
     ImGui::SFML::Init(window_);
+    ImGui::GetIO().IniFilename = NULL;
     currentState_ = std::make_unique<MenuState>();
 }
 
-void Game::HandleEvents(sf::Event& event) {
+// Global events, working across all states
+void Game::handleGlobalEvents() {
+    sf::Event event;
     while(window_.pollEvent(event)) {
-        ImGui::SFML::ProcessEvent(window_, event);
+        ImGui::SFML::ProcessEvent(event);
         if (event.type == sf::Event::Closed) {
             window_.close();
         }
+        if (event.type == sf::Event::KeyPressed) {
+            sf::Keyboard::Key key = event.key.code;
+            switch(key) {
+            case sf::Keyboard::Escape:
+                window_.close();
+                break;
+            }
+        }
+        // Local events specific for every state
+        currentState_->HandleEvents(window_, event);
     }
 }
 
-void Game::UpdateState(State::Type type) {
-    if (type == currentState_->getType()) return;
+// Each transition instantiate new state sample 
+void Game::updateState(State::Type type) {
+    if (type == currentState_->GetType()) return;
     
-    std::cout << "creating new state!" << std::endl; 
     switch (type) {
     case State::Type::Menu:
         currentState_ = std::make_unique<MenuState>();
@@ -39,13 +52,15 @@ void Game::Run() {
     sf::Clock clock;
     while (window_.isOpen()) {
         sf::Time dt = clock.restart();
-        sf::Event event;
-        HandleEvents(event);
+        handleGlobalEvents();
         ImGui::SFML::Update(window_, dt);
-        State::Type nextStateType = currentState_->update();
-        UpdateState(nextStateType);
+        State::Type nextStateType = currentState_->Update();
+        updateState(nextStateType);
         ImGui::SFML::Render(window_);
-        currentState_->render(window_);
+        currentState_->Render(window_);
     }   
     ImGui::SFML::Shutdown();
 }
+
+
+

@@ -7,7 +7,7 @@
 class Conductor {
 public:
     Conductor();
-    void Init();
+    void Init(const std::string&);
     void Play();
     void Pause();
     void Stop();
@@ -15,9 +15,10 @@ public:
     sf::SoundSource::Status GetStatus() const;
 
 private:
-    void readMidi();
-    void readSong();
+    void readMidi(const std::string&);
+    void readSong(const std::string&);
     smf::MidiFile midiFile;
     sf::Music music;
     sf::SoundSource::Status status;
+    static std::string currentSong;
 };

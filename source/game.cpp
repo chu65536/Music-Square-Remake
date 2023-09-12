@@ -6,11 +6,12 @@
 #include "imgui-SFML.h"
 
 Game::Game() {
-    window_.create(sf::VideoMode(500u, 500u), "Title");
+    window_.create(sf::VideoMode(800u, 800u), "Title");
     window_.setKeyRepeatEnabled(false);
     ImGui::SFML::Init(window_);
     ImGui::GetIO().IniFilename = NULL;
-    currentState_ = std::make_unique<MenuState>();
+    menuPlayData_ = MenuPlayData();
+    currentState_ = std::make_unique<MenuState>(menuPlayData_);
 }
 
 // Global events, working across all states
@@ -40,10 +41,10 @@ void Game::updateState(State::Type type) {
     
     switch (type) {
     case State::Type::Menu:
-        currentState_ = std::make_unique<MenuState>();
-        break;
+        currentState_ = std::make_unique<MenuState>(menuPlayData_);
+        break;  
     case State::Type::Play:
-        currentState_ = std::make_unique<PlayState>();
+        currentState_ = std::make_unique<PlayState>(menuPlayData_);
         break;
     }
 }

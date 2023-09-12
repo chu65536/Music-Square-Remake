@@ -1,23 +1,36 @@
 #include "conductor.hpp"
+#include <filesystem>
 
 Conductor::Conductor() = default;
 
-void Conductor::Init() {
-    readMidi();
-    readSong();
+void Conductor::Init(const std::string& song) {
+    readMidi(song);
+    readSong(song);
     status = sf::SoundSource::Stopped;
 }
 
-void Conductor::readMidi() {
-    if (!midiFile.read("../resources/songs/all star/All Star.mid")) {
-        std::cout << "Error: Midi file is not found" << std::endl;
+void Conductor::readMidi(const std::string& song) {
+    std::string path = "../resources/songs/" + song;
+    for (const auto & entry : std::filesystem::directory_iterator(path)) {
+        if (entry.path().extension() == ".mid") {
+            midiFile.read(entry.path());
+            return;
+        }
     }
+
+    std::cout << "Error: midi file not found" << std::endl;
 }
 
-void Conductor::readSong() {
-    if (!music.openFromFile("../resources/songs/all star/All Star.ogg")) {
-        std::cout << "Error: Music file is not found" << std::endl;
+void Conductor::readSong(const std::string& song) {
+    std::string path = "../resources/songs/" + song;
+    for (const auto & entry : std::filesystem::directory_iterator(path)) {
+        if (entry.path().extension() == ".ogg") {
+            music.openFromFile(entry.path());
+            return;
+        }
     }
+
+    std::cout << "Error: ogg file not found" << std::endl;
 }
 
 void Conductor::Play() {

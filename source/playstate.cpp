@@ -4,8 +4,9 @@
 
 #include <iostream>
 
-PlayState::PlayState() {
-    conductor_.Init();
+PlayState::PlayState(MenuPlayData& data) :
+    menuPlaydata_(data) {
+    conductor_.Init(data.chosenSong);
 }
 
 State::Type PlayState::GetType() const { return State::Type::Play; }
@@ -30,6 +31,8 @@ void PlayState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
 }
 
 State::Type PlayState::Update() {
+    ImGui::ShowDemoWindow();
+
     if (ImGui::Button("Menu", ImVec2(300.f, 100.f)))
         return State::Type::Menu;
 

@@ -1,8 +1,11 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <vector>
 #include "state.hpp"
 #include "conductor.hpp"
+#include "menuplaydata.hpp"
+
 
 class Game {
 public:
@@ -13,4 +16,5 @@ private:
     void updateState(State::Type);
     sf::RenderWindow window_;
     std::unique_ptr<State> currentState_;
+    MenuPlayData menuPlayData_;
 };

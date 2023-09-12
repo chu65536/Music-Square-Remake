@@ -2,7 +2,8 @@
 
 #include <string>
 
-class MenuPlayData {
+
+class GameData {
 public:
     std::string chosenSong;
 };

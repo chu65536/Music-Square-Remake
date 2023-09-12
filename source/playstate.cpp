@@ -1,15 +1,12 @@
+#include <iostream>
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "playstate.hpp"
 
-#include <iostream>
 
-PlayState::PlayState(MenuPlayData& data) :
-    menuPlaydata_(data) {
-    conductor_.Init(data.chosenSong);
-}
-
-State::Type PlayState::GetType() const { return State::Type::Play; }
+PlayState::PlayState(GameData& data) :
+    gameData_(data),
+    conductor_(data.chosenSong) {}
 
 void PlayState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
@@ -30,13 +27,13 @@ void PlayState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
     }
 }
 
-State::Type PlayState::Update() {
+State::Type PlayState::Update(sf::Time dt) {
     ImGui::ShowDemoWindow();
 
     if (ImGui::Button("Menu", ImVec2(300.f, 100.f)))
         return State::Type::Menu;
 
-    return State::Type::Play;
+    return State::Type::None;
 }
 
 void PlayState::Render(sf::RenderWindow& window) {

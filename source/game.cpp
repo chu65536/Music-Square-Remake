@@ -5,13 +5,14 @@
 #include "imgui.h"
 #include "imgui-SFML.h"
 
+
 Game::Game() {
     window_.create(sf::VideoMode(800u, 800u), "Title");
     window_.setKeyRepeatEnabled(false);
     ImGui::SFML::Init(window_);
     ImGui::GetIO().IniFilename = NULL;
-    menuPlayData_ = MenuPlayData();
-    currentState_ = std::make_unique<MenuState>(menuPlayData_);
+    gameData_ = GameData();
+    currentState_ = std::make_unique<MenuState>(gameData_);
 }
 
 // Global events, working across all states
@@ -36,15 +37,13 @@ void Game::handleGlobalEvents() {
 }
 
 // Each transition instantiate new state sample 
-void Game::updateState(State::Type type) {
-    if (type == currentState_->GetType()) return;
-    
+void Game::setState(State::Type type) {    
     switch (type) {
     case State::Type::Menu:
-        currentState_ = std::make_unique<MenuState>(menuPlayData_);
+        currentState_ = std::make_unique<MenuState>(gameData_);
         break;  
     case State::Type::Play:
-        currentState_ = std::make_unique<PlayState>(menuPlayData_);
+        currentState_ = std::make_unique<PlayState>(gameData_);
         break;
     }
 }
@@ -55,8 +54,8 @@ void Game::Run() {
         sf::Time dt = clock.restart();
         handleGlobalEvents();
         ImGui::SFML::Update(window_, dt);
-        State::Type nextStateType = currentState_->Update();
-        updateState(nextStateType);
+        State::Type nextStateType = currentState_->Update(dt);
+        setState(nextStateType);
         ImGui::SFML::Render(window_);
         currentState_->Render(window_);
     }   

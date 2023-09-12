@@ -1,24 +1,20 @@
+#include <iostream>
+#include <filesystem>
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "menustate.hpp"
 
-#include <iostream>
-#include <filesystem>
 
-
-MenuState::MenuState(MenuPlayData& data) :
-    menuPlayData_(data) {
+MenuState::MenuState(GameData& data) :
+    gameData_(data) {
     loadSongs();
 }
-
-State::Type MenuState::GetType() const { return State::Type::Menu; }
 
 void MenuState::loadSongs() {
     std::string path = "../resources/songs";
     for (const auto & entry : std::filesystem::directory_iterator(path)) {
         std::string song = entry.path().filename();
         loadedSongs.emplace_back(song);
-        std::cout << song << " - Loaded!" <<  std::endl;
     }
 }
 
@@ -33,17 +29,16 @@ void MenuState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
     }
 }
 
-State::Type MenuState::Update() {
+State::Type MenuState::Update(sf::Time dt) {
     for (size_t i = 0; i < loadedSongs.size(); ++i) {   
         std::string song = loadedSongs[i];
         if (ImGui::Button(song.c_str(), ImVec2(-FLT_MIN, 0.0f))) {
-            std::cout << "playing song - " << song << std::endl;
-            menuPlayData_.chosenSong = song;
+            gameData_.chosenSong = song;
             return State::Type::Play;
         }
     }
 
-    return State::Type::Menu;
+    return State::Type::None;
 }
 
 void MenuState::Render(sf::RenderWindow& window) {

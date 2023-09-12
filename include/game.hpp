@@ -4,7 +4,7 @@
 #include <vector>
 #include "state.hpp"
 #include "conductor.hpp"
-#include "menuplaydata.hpp"
+#include "gamedata.hpp"
 
 
 class Game {
@@ -13,8 +13,8 @@ public:
     void Run();
 private:
     void handleGlobalEvents();
-    void updateState(State::Type);
+    void setState(State::Type type);
     sf::RenderWindow window_;
     std::unique_ptr<State> currentState_;
-    MenuPlayData menuPlayData_;
+    GameData gameData_;
 };

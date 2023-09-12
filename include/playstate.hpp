@@ -2,17 +2,17 @@
 
 #include "state.hpp"
 #include "conductor.hpp"
-#include "menuplaydata.hpp"
+#include "gamedata.hpp"
+
 
 class PlayState : public State {
 public:
-    PlayState(MenuPlayData&);
-    State::Type Update() override;
-    void HandleEvents(sf::RenderWindow&, sf::Event&) override;
-    void Render(sf::RenderWindow&) override;
-    State::Type GetType() const override;
+    PlayState(GameData& data);
+    State::Type Update(sf::Time dt) override;
+    void HandleEvents(sf::RenderWindow& window, sf::Event& event) override;
+    void Render(sf::RenderWindow& window) override;
 
 private:
-    MenuPlayData& menuPlaydata_;
+    GameData& gameData_;
     Conductor conductor_;
 };

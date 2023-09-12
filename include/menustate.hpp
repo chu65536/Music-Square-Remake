@@ -2,18 +2,18 @@
 
 #include <vector>
 #include "state.hpp"
-#include "menuplaydata.hpp"
+#include "gamedata.hpp"
+
 
 class MenuState : public State {
 public:
-    MenuState(MenuPlayData&);
-    State::Type Update() override;
-    void HandleEvents(sf::RenderWindow&, sf::Event&) override;
-    void Render(sf::RenderWindow&) override;
-    State::Type GetType() const override;
+    MenuState(GameData& data);
+    State::Type Update(sf::Time dt) override;
+    void HandleEvents(sf::RenderWindow& window, sf::Event& event) override;
+    void Render(sf::RenderWindow& window) override;
 
 private:
-    MenuPlayData& menuPlayData_;
+    GameData& gameData_;
     std::vector<std::string> loadedSongs;
     void loadSongs();
 };

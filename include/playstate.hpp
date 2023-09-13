@@ -2,6 +2,7 @@
 
 #include "state.hpp"
 #include "conductor.hpp"
+#include "parser.hpp"
 #include "gamedata.hpp"
 
 

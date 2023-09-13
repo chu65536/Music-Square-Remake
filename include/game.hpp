@@ -2,6 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include <memory>
 #include "state.hpp"
 #include "conductor.hpp"
 #include "gamedata.hpp"

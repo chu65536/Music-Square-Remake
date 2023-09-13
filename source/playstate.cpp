@@ -6,7 +6,7 @@
 
 PlayState::PlayState(GameData& data) :
     gameData_(data),
-    conductor_(data.chosenSong) {}
+    conductor_(data.music) {}
 
 void PlayState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
@@ -30,14 +30,13 @@ void PlayState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
 State::Type PlayState::Update(sf::Time dt) {
     ImGui::ShowDemoWindow();
 
-    if (ImGui::Button("Menu", ImVec2(300.f, 100.f)))
+    if (ImGui::Button("Menu", ImVec2(300.f, 100.f))){
+        gameData_.music.stop();
         return State::Type::Menu;
+    }
 
     return State::Type::None;
 }
 
 void PlayState::Render(sf::RenderWindow& window) {
-    window.clear(); 
-    ImGui::SFML::Render(window);
-    window.display();
 }

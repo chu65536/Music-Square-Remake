@@ -13,7 +13,7 @@ public:
     void Render(sf::RenderWindow& window) override;
 
 private:
+    void loadSongs();
     GameData& gameData_;
     std::vector<std::string> loadedSongs;
-    void loadSongs();
 };

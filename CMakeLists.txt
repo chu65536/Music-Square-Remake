@@ -66,6 +66,7 @@ add_executable(sfml-app
   source/main.cpp
   source/game.cpp
   source/menustate.cpp
+  source/loadstate.cpp
   source/playstate.cpp
   source/conductor.cpp
 )

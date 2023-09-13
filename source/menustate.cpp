@@ -12,8 +12,14 @@ MenuState::MenuState(GameData& data) :
 
 void MenuState::loadSongs() {
     std::string path = "../resources/songs";
+    if (!std::filesystem::is_directory(std::filesystem::path(path))) {
+        std::cout << "Error: songs folder is not found" << std::endl;
+        return;
+    }
+    
+    loadedSongs.clear();
     for (const auto & entry : std::filesystem::directory_iterator(path)) {
-        std::string song = entry.path().filename();
+        std::string song = entry.path().filename().string();
         loadedSongs.emplace_back(song);
     }
 }
@@ -33,8 +39,8 @@ State::Type MenuState::Update(sf::Time dt) {
     for (size_t i = 0; i < loadedSongs.size(); ++i) {   
         std::string song = loadedSongs[i];
         if (ImGui::Button(song.c_str(), ImVec2(-FLT_MIN, 0.0f))) {
-            gameData_.chosenSong = song;
-            return State::Type::Play;
+            gameData_.songName = song;
+            return State::Type::Load;
         }
     }
 
@@ -42,7 +48,4 @@ State::Type MenuState::Update(sf::Time dt) {
 }
 
 void MenuState::Render(sf::RenderWindow& window) {
-    window.clear(); 
-    ImGui::SFML::Render(window);
-    window.display();
 }

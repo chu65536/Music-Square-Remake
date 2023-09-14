@@ -9,13 +9,11 @@
 
 Game::Game() {
     window_.create(sf::VideoMode(800u, 800u), "Title");
-    window_.setKeyRepeatEnabled(false);
     ImGui::SFML::Init(window_);
     ImGui::GetIO().IniFilename = NULL;
     currentState_ = std::make_unique<MenuState>(gameData_);
 }
 
-// Global events, working across all states
 void Game::handleGlobalEvents() {
     sf::Event event;
     while(window_.pollEvent(event)) {
@@ -26,17 +24,12 @@ void Game::handleGlobalEvents() {
         if (event.type == sf::Event::KeyPressed) {
             sf::Keyboard::Key key = event.key.code;
             switch(key) {
-            case sf::Keyboard::Escape:
-                window_.close();
-                break;
             }
         }
-        // Local events specific for every state
         currentState_->HandleEvents(window_, event);
     }
 }
 
-// Each transition instantiate new state sample 
 void Game::setState(State::Type type) {  
     switch (type) {
     case State::Type::Menu:
@@ -64,8 +57,8 @@ void Game::Run() {
 
         // Render
         window_.clear(); 
-        ImGui::SFML::Render(window_);
         currentState_->Render(window_);
+        ImGui::SFML::Render(window_);
         window_.display();
     }   
     ImGui::SFML::Shutdown();

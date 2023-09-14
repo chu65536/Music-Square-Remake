@@ -68,7 +68,9 @@ add_executable(sfml-app
   source/menustate.cpp
   source/loadstate.cpp
   source/playstate.cpp
+  source/parser.cpp
   source/conductor.cpp
+  source/map.cpp
 )
 target_include_directories(
   sfml-app

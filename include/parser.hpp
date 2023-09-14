@@ -1,12 +1,10 @@
 #pragma once
 
+#include <vector>
 #include "MidiFile.h"
 
 
 class Parser {
 public:
-    Parser();
-    void Parse(const smf::MidiFile& file);
-private:
-    smf::MidiFile midiFile_;
+    std::vector<double> Parse(smf::MidiFile& file);
 };

@@ -4,6 +4,7 @@
 #include "conductor.hpp"
 #include "parser.hpp"
 #include "gamedata.hpp"
+#include "map.hpp"
 
 
 class PlayState : public State {
@@ -16,4 +17,7 @@ public:
 private:
     GameData& gameData_;
     Conductor conductor_;
+    Map map_;
+
+    bool exit_ = false;
 };

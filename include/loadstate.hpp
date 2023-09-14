@@ -15,13 +15,13 @@ public:
     void Render(sf::RenderWindow& window) override;
 
 private:
-    std::string findFileByExtension(const std::string& path, const std::string& ext) const ;
+    void load();
+    std::string findFileByExtension(const std::string& path, const std::string& ext) const;
     void readMidi();
     void readAudio();
-    void load();
     GameData& gameData_;
     std::thread loadThread_;
     smf::MidiFile midiFile_;
-    sf::Music music_;
+    float loadProgress_;
     bool isLoaded_;
 };

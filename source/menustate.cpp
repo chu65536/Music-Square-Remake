@@ -28,6 +28,9 @@ void MenuState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         sf::Keyboard::Key key = event.key.code;
         switch(key) {
+        case sf::Keyboard::Escape:
+            window.close();
+            break;
         case sf::Keyboard::R:
             loadSongs();
             break;

@@ -2,11 +2,13 @@
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "playstate.hpp"
+#include "map.hpp"
 
 
 PlayState::PlayState(GameData& data) :
     gameData_(data),
-    conductor_(data.music) {}
+    conductor_(data.music),
+    map_(data.map) {}
 
 void PlayState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
@@ -23,14 +25,15 @@ void PlayState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
         case sf::Keyboard::S:
             conductor_.Stop();
             break;
+        case:: sf::Keyboard::Escape:
+            exit_ = true;
+            break;
         }
     }
 }
 
 State::Type PlayState::Update(sf::Time dt) {
-    ImGui::ShowDemoWindow();
-
-    if (ImGui::Button("Menu", ImVec2(300.f, 100.f))){
+    if (exit_) {
         gameData_.music.stop();
         return State::Type::Menu;
     }
@@ -39,4 +42,5 @@ State::Type PlayState::Update(sf::Time dt) {
 }
 
 void PlayState::Render(sf::RenderWindow& window) {
+    map_.Render(window);
 }

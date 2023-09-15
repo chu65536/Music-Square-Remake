@@ -1,12 +1,17 @@
 #pragma once
 
 #include "state.hpp"
+#include "configdata.hpp"
 
-
-class MenuState : public State {
+class ConfigState : public State {
 public:
-    MenuState() = default;
+    ConfigState(ConfigData& data);
     State::Type Update(sf::Time dt) override;
     void HandleEvents(sf::RenderWindow& window, sf::Event& event) override;
     void Render(sf::RenderWindow& window) override;
+
+private:
+    void configMenu();
+    ConfigData& configData_;
+    bool exit_ = false;
 };

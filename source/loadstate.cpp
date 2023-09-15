@@ -4,15 +4,12 @@
 #include "imgui-SFML.h"
 #include "loadstate.hpp"
 #include "parser.hpp"
-#include "map.hpp"
 
 
-LoadState::LoadState(GameData& data) :
-    gameData_(data),
-    isLoaded_(false) {
-    loadThread_ = std::thread(&LoadState::load, this);
-    loadProgress_ = 0.f;
-}
+LoadState::LoadState(GameData& gameData, const ConfigData& configData) :
+    gameData_(gameData),
+    configData_(configData), 
+    loadThread_(std::thread(&LoadState::load, this)) {}
 
 void LoadState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
@@ -23,7 +20,6 @@ void LoadState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
 }
 
 State::Type LoadState::Update(sf::Time dt) {
-    std::cout << "Loading: " << int(loadProgress_ * 100) << '%' << std::endl;
     if(isLoaded_) {
         loadThread_.join();
         return State::Type::Play;
@@ -66,6 +62,7 @@ void LoadState::load() {
     readMidi();
     Parser parser;
     std::vector<double> delays = parser.Parse(midiFile_);
-    gameData_.map.Generate(delays);
+    gameData_.square.Init(configData_);
+    gameData_.map.Generate(delays, configData_);
     isLoaded_ = true;
 }

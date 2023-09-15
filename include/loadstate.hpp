@@ -4,12 +4,13 @@
 #include <thread>
 #include "state.hpp"
 #include "gamedata.hpp"
+#include "configdata.hpp"
 #include "MidiFile.h"
 
 
 class LoadState : public State {
 public:
-    LoadState(GameData& data);
+    LoadState(GameData& gameData, const ConfigData& configData);
     State::Type Update(sf::Time dt) override;
     void HandleEvents(sf::RenderWindow& window, sf::Event& event) override;
     void Render(sf::RenderWindow& window) override;
@@ -20,8 +21,8 @@ private:
     void readMidi();
     void readAudio();
     GameData& gameData_;
+    const ConfigData& configData_;
     std::thread loadThread_;
     smf::MidiFile midiFile_;
-    float loadProgress_;
-    bool isLoaded_;
+    bool isLoaded_ = false;
 };

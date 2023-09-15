@@ -4,8 +4,8 @@
 #include <vector>
 #include <memory>
 #include "state.hpp"
-#include "conductor.hpp"
 #include "gamedata.hpp"
+#include "configdata.hpp"
 
 
 class Game {
@@ -18,4 +18,5 @@ private:
     sf::RenderWindow window_;
     std::unique_ptr<State> currentState_;
     GameData gameData_;
+    ConfigData configData_;
 };

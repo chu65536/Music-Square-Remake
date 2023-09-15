@@ -66,11 +66,15 @@ add_executable(sfml-app
   source/main.cpp
   source/game.cpp
   source/menustate.cpp
+  source/configstate.cpp
+  source/selectionstate.cpp
   source/loadstate.cpp
   source/playstate.cpp
   source/parser.cpp
   source/conductor.cpp
   source/map.cpp
+  source/gamedata.cpp
+  source/square.cpp
 )
 target_include_directories(
   sfml-app

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SFML/Audio.hpp>
-#include "MidiFile.h"
 
 
 class Conductor {

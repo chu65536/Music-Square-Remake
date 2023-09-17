@@ -10,10 +10,9 @@ public:
     void Init(const ConfigData data);
     void Update (float time, const Platform& platform);
     void Render(sf::RenderWindow& window);
-    void MultiplySpeed(sf::Vector2i multi);
     sf::Vector2f GetPosition() const;
 private:
-    sf::Vector2f position_;
-    sf::Vector2f speed_;
+    sf::Vector2f position_{0.f, 0.f};
+    sf::Vector2f speed_{0.f, 0.f};
     sf::RectangleShape rect_; 
 };

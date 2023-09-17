@@ -15,6 +15,7 @@ public:
 private:
     void handleGlobalEvents();
     void setState(State::Type type);
+    void debugWindow(const GameData& gameData, const ConfigData& configData, const sf::Time& dt) const;
     sf::RenderWindow window_;
     std::unique_ptr<State> currentState_;
     GameData gameData_;

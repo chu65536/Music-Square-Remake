@@ -7,6 +7,7 @@ void Square::Init(const ConfigData data) {
     rect_ = sf::RectangleShape(data.squareSize);
     rect_.setOrigin(data.squareSize.x / 2, data.squareSize.y / 2);
     rect_.setPosition(position_);
+    rect_.setFillColor(sf::Color::Red);
 }
 
 void Square::Update(float time, const Platform& platform) {
@@ -33,11 +34,6 @@ void Square::Update(float time, const Platform& platform) {
 
 void Square::Render(sf::RenderWindow& window) {
     window.draw(rect_);
-}
-
-void Square::MultiplySpeed(sf::Vector2i multi) {
-    speed_.x *= multi.x;
-    speed_.y *= multi.y;
 }
 
 sf::Vector2f Square::GetPosition() const {

@@ -8,20 +8,17 @@ Platform::Platform(sf::Vector2f position, Platform::Direction direction, double 
 {
     rect_.setPosition(position_);    
     rect_.setOrigin(data.platformSize.x / 2, -data.squareSize.y / 2);
-    rect_.setFillColor(sf::Color::Red);
+    rect_.setFillColor(sf::Color::White);
 
     switch(direction) {
         case Platform::Direction::Left:
             rect_.setRotation(90.f);
-            rect_.setFillColor(sf::Color::Green);
             break;
         case Platform::Direction::Up:
             rect_.setRotation(180.f);
-            rect_.setFillColor(sf::Color::Blue);
             break;
         case Platform::Direction::Right:
             rect_.setRotation(270.f);
-            rect_.setFillColor(sf::Color::Yellow);
             break;
     }
 }
@@ -44,18 +41,18 @@ Platform::Direction Platform::GetDirection() const {
 
 
 void Map::makePlatforms(const std::vector<double>& delays) {
-    sf::Vector2f position = configData_.position;
-    sf::Vector2f speed = configData_.speed;
+    sf::Vector2f position = configDataPt_->position;
+    sf::Vector2f speed = configDataPt_->speed;
 
-    platforms_.emplace_back(position, Platform::Direction::Up, 0.0, configData_);
+    platforms_.emplace_back(position, Platform::Direction::Up, 0.0, *configDataPt_);
     for (size_t i = 1; i < delays.size(); ++i) {
         float deltaTime = delays[i] - delays[i - 1];
         position += speed * deltaTime;
         if (speed.y > 0) { 
-            platforms_.emplace_back(position, Platform::Direction::Down, delays[i], configData_);
+            platforms_.emplace_back(position, Platform::Direction::Down, delays[i], *configDataPt_);
         }
         else {
-            platforms_.emplace_back(position, Platform::Direction::Up, delays[i], configData_);
+            platforms_.emplace_back(position, Platform::Direction::Up, delays[i], *configDataPt_);
         }
         speed.y *= -1;
     }   
@@ -63,7 +60,7 @@ void Map::makePlatforms(const std::vector<double>& delays) {
 }
 
 void Map::Generate(const std::vector<double>& delays, const ConfigData& configData) {
-    configData_ = configData;
+    configDataPt_ = &configData;
     makePlatforms(delays);
 }
 
@@ -78,9 +75,13 @@ void Map::Clear() {
     curPlatform = 0;
 }
 
-Platform Map::GetNextPlatform(float time) {
-    while (curPlatform + 1 < platforms_.size() &&  time > platforms_[curPlatform + 1].GetTime()) {
+const Platform& Map::GetNextPlatform(float time) {
+    while (curPlatform + 1 < platforms_.size() && time > platforms_[curPlatform + 1].GetTime()) {
         curPlatform++;
     }
     return platforms_[curPlatform];
+}
+
+bool Map::isEnd() const {
+    return platforms_.size() - 1 == curPlatform;
 }

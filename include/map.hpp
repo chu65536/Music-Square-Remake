@@ -22,14 +22,14 @@ private:
 
 class Map {
 public:
-    Map() = default;
     void Render(sf::RenderWindow& window) const;
     void Generate(const std::vector<double>& delays, const ConfigData& configData);
     void Clear();
-    Platform GetNextPlatform(float time);
+    const Platform& GetNextPlatform(float time);
+    bool isEnd() const;
 private:
     void makePlatforms(const std::vector<double>& delays);
     std::vector<Platform> platforms_;
-    ConfigData configData_;
+    const ConfigData* configDataPt_ = nullptr;
     size_t curPlatform = 0;
 };

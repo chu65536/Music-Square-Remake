@@ -1,4 +1,6 @@
 #include "configstate.hpp"
+#include "imgui.h"
+#include "imgui-SFML.h"
 
 ConfigState::ConfigState(ConfigData& data) :
     configData_(data) {}
@@ -28,6 +30,7 @@ void ConfigState::Render(sf::RenderWindow& window) {
 }
 
 void ConfigState::configMenu() {
-    
+    ImGui::ShowDemoWindow();
+    ImGui::Checkbox("Debug info", &configData_.debugWindow);
 }
 

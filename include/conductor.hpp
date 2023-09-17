@@ -11,7 +11,6 @@ public:
     void Stop();
     float GetPlaybackPosition() const;
     sf::SoundSource::Status GetStatus() const;
-
 private:
     sf::Music& music_;
 };

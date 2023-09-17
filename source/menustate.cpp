@@ -16,7 +16,6 @@ void MenuState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
 }
 
 State::Type MenuState::Update(sf::Time dt) {
-    ImGui::ShowDemoWindow();
     if (ImGui::Button("Songs")) {
         return State::Type::Selection;
     }

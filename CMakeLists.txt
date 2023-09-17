@@ -75,6 +75,7 @@ add_executable(sfml-app
   source/map.cpp
   source/gamedata.cpp
   source/square.cpp
+  source/camera.cpp
 )
 target_include_directories(
   sfml-app

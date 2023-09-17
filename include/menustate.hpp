@@ -5,7 +5,6 @@
 
 class MenuState : public State {
 public:
-    MenuState() = default;
     State::Type Update(sf::Time dt) override;
     void HandleEvents(sf::RenderWindow& window, sf::Event& event) override;
     void Render(sf::RenderWindow& window) override;

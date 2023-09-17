@@ -4,11 +4,10 @@
 #include "playstate.hpp"
 
 
-PlayState::PlayState(GameData& data) :
-    gameData_(data),
-    conductor_(data.music),
-    map_(data.map),
-    square_(data.square) {}
+PlayState::PlayState(GameData& gameData, ConfigData& configData) :
+    gameData_(gameData),
+    configData_(configData),
+    conductor_(gameData.music) {}
 
 void PlayState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
@@ -38,25 +37,34 @@ State::Type PlayState::Update(sf::Time dt) {
         return State::Type::Menu;
     }
 
-    if (conductor_.GetStatus() == sf::SoundSource::Playing) {
-        timer_ += dt.asSeconds();
-    }
+    settingsWindow();
+    if (!gameData_.map.isEnd()) {
+        if (conductor_.GetStatus() == sf::SoundSource::Playing) {
+            timer_ += dt.asSeconds();
+        }
 
-    float dif = timer_ - conductor_.GetPlaybackPosition();
-    if (abs(dif) > 0.1f) {
-        timer_ = conductor_.GetPlaybackPosition();
+        float dif = timer_ - conductor_.GetPlaybackPosition();
+        if (abs(dif) > 0.1f) {
+            timer_ = conductor_.GetPlaybackPosition();
+        }
     }
-
-    Platform curPlatform = map_.GetNextPlatform(timer_);
-    square_.Update(timer_, curPlatform);
+    Platform curPlatform = gameData_.map.GetNextPlatform(timer_);
+    gameData_.square.Update(timer_, curPlatform);
+    gameData_.camera.Update(dt);
 
     return State::Type::None;
 }
 
 void PlayState::Render(sf::RenderWindow& window) {
-    sf::View camera(square_.GetPosition(), sf::Vector2f(500.f, 500.f));
-    window.setView(camera);
-    square_.Render(window);
-    map_.Render(window);
+    gameData_.map.Render(window);
+    gameData_.square.Render(window);
+}
+
+void PlayState::settingsWindow() {
+    if (ImGui::Begin("Live Settings")) {
+        ImGui::DragFloat("Camera zoom", &gameData_.camera.getZoom(), 0.05f, 0.1f, 1.f);
+        ImGui::DragFloat("Camera speed", &gameData_.camera.getSpeed(), 0.2f, 1.f, 10.f);
+    }
+    ImGui::End();
 }
 

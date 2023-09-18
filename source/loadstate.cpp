@@ -64,6 +64,6 @@ void LoadState::load() {
     std::vector<double> delays = parser.Parse(midiFile_);
     gameData_.square.Init(configData_);
     gameData_.camera.Init(gameData_.windowPt, gameData_.square, configData_.position, configData_.windowSize);
-    gameData_.map.Generate(delays, configData_);
+    gameData_.map.Init(delays, &configData_, &gameData_.square);
     isLoaded_ = true;
 }

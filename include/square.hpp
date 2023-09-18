@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "configdata.hpp"
-#include "map.hpp"
+#include "platform.hpp"
 
 
 class Square {
@@ -10,6 +10,7 @@ public:
     void Init(const ConfigData data);
     void Update (float time, const Platform& platform);
     void Render(sf::RenderWindow& window);
+    void SetSpeed(const sf::Vector2f& speed);
     sf::Vector2f GetPosition() const;
 private:
     sf::Vector2f position_{0.f, 0.f};

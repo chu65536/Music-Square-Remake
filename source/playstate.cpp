@@ -7,7 +7,9 @@
 PlayState::PlayState(GameData& gameData, ConfigData& configData) :
     gameData_(gameData),
     configData_(configData),
-    conductor_(gameData.music) {}
+    conductor_(gameData.music) {
+    srand(time(0));
+}
 
 void PlayState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
@@ -62,8 +64,8 @@ void PlayState::Render(sf::RenderWindow& window) {
 
 void PlayState::settingsWindow() {
     if (ImGui::Begin("Live Settings")) {
-        ImGui::DragFloat("Camera zoom", &gameData_.camera.getZoom(), 0.05f, 0.1f, 1.f);
-        ImGui::DragFloat("Camera speed", &gameData_.camera.getSpeed(), 0.2f, 1.f, 10.f);
+        ImGui::DragFloat("Camera zoom", &gameData_.camera.zoom, 0.05f, 0.1f, 1.f);
+        ImGui::DragFloat("Camera speed", &gameData_.camera.speed, 0.2f, 1.f, 10.f);
     }
     ImGui::End();
 }

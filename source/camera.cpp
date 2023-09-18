@@ -19,20 +19,12 @@ void Camera::Init(sf::RenderWindow* window, Square& target, sf::Vector2f positio
 
 void Camera::Update(const sf::Time& dt) {
     sf::Vector2f targetPosition = targetPt_->GetPosition();
-    position_ = Lerp(position_, targetPosition, smoothSpeed_ * dt.asSeconds());
-    view_.setSize(size_ * zoom_);   
+    position_ = Lerp(position_, targetPosition, speed * dt.asSeconds());
+    view_.setSize(size_ * zoom);   
     view_.setCenter(position_);
     windowPt_->setView(view_);
 }
 
 sf::Vector2f Camera::GetPosition() const {
     return position_;
-}
-
-float& Camera::getZoom() {
-    return zoom_;
-}
-
-float& Camera::getSpeed() {
-    return smoothSpeed_;
 }

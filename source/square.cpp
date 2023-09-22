@@ -7,13 +7,14 @@ void Square::Init(const ConfigData data) {
     rect_ = sf::RectangleShape(data.squareSize);
     rect_.setOrigin(data.squareSize.x / 2, data.squareSize.y / 2);
     rect_.setPosition(position_);
-    rect_.setFillColor(sf::Color::White);
+    rect_.setFillColor(sf::Color::Red);
 }
 
 void Square::Update(float time, const Platform& platform) {
     position_ = platform.GetPosition();
     float deltaTime = time - platform.GetTime();
     Platform::Direction dir = platform.GetDirection();
+    speed_ = platform.GetSpeedAfter();
     switch(dir) {
     case Platform::Direction::Up:
         speed_.y *= (speed_.y < 0 ? -1 : 1);
@@ -41,5 +42,8 @@ void Square::Render(sf::RenderWindow& window) {
 }
 
 sf::Vector2f Square::GetPosition() const {
+    return position_;
+}
+const sf::Vector2f& Square::GetPositionRef() const {
     return position_;
 }

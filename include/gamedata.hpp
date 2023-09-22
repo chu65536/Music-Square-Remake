@@ -15,5 +15,4 @@ public:
     sf::Music music;
     Square square;
     Map map;
-    Camera camera;
 };

@@ -26,3 +26,10 @@ float Conductor::GetPlaybackPosition() const {
 sf::SoundSource::Status Conductor::GetStatus() const {
     return music_.getStatus();
 }
+
+void Conductor::Normalize(float& timer) {
+    float dif = timer - GetPlaybackPosition();
+    if (abs(dif) > normalizeValue_) {
+        timer = GetPlaybackPosition();
+    }  
+}

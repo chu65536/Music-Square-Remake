@@ -24,4 +24,5 @@ private:
     std::thread loadThread_;
     smf::MidiFile midiFile_;
     bool isLoaded_ = false;
+    Camera camera_;
 };

@@ -6,21 +6,13 @@ float lerp(float a, float b, float f) {
     return a + f * (b - a);
 }
 
-sf::Vector2f Lerp(const sf::Vector2f& v1, const sf::Vector2f& v2, float f) {
+sf::Vector2f lerp2f(const sf::Vector2f& v1, const sf::Vector2f& v2, float f) {
     return sf::Vector2f{lerp(v1.x, v2.x, f), lerp(v1.y, v2.y, f)};
 }
 
-void Camera::Init(sf::RenderWindow* window, Square& target, sf::Vector2f position, sf::Vector2f size) {
-    windowPt_ = window;
-    targetPt_ = &target;
-    position_ = position;
-    size_ = size;
-}
-
 void Camera::Update(const sf::Time& dt) {
-    sf::Vector2f targetPosition = targetPt_->GetPosition();
-    position_ = Lerp(position_, targetPosition, speed * dt.asSeconds());
-    view_.setSize(size_ * zoom);   
+    position_ = lerp2f(position_, targetPosition_, speed * dt.asSeconds());
+    view_.setSize(size_ * (1.f / zoom));   
     view_.setCenter(position_);
     windowPt_->setView(view_);
 }

@@ -7,16 +7,25 @@
 
 class Camera {
 public:
-    void Init(sf::RenderWindow* window, Square& target, sf::Vector2f position, sf::Vector2f size);
+    template<typename T>
+    Camera(sf::RenderWindow* window, const T& target, const sf::Vector2f& position, const sf::Vector2f& size);
     void Update(const sf::Time& dt);
     sf::Vector2f GetPosition() const;
 
-    float zoom = 1.f;
+    float zoom = 2.f;
     float speed = 5.f;
 private:
     sf::RenderWindow* windowPt_ = nullptr;
-    const Square* targetPt_ = nullptr;
+    const sf::Vector2f& targetPosition_;
     sf::Vector2f position_;
     sf::Vector2f size_;
     sf::View view_;
 };
+
+template<typename T>
+inline Camera::Camera(sf::RenderWindow* window, const T& target, const sf::Vector2f& position, const sf::Vector2f& size) :
+    windowPt_(window),
+    targetPosition_(target.GetPositionRef()),
+    position_(position),
+    size_(size) {
+}

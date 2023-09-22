@@ -11,6 +11,8 @@ public:
     void Stop();
     float GetPlaybackPosition() const;
     sf::SoundSource::Status GetStatus() const;
+    void Normalize(float& time);
 private:
     sf::Music& music_;
+    float normalizeValue_ = 0.1f;
 };

@@ -10,7 +10,7 @@
 
 
 Game::Game() {
-    window_.create(sf::VideoMode(800u, 800u), "Title");
+    window_.create(sf::VideoMode(configData_.windowSize.x, configData_.windowSize.y), "Title", sf::Style::Fullscreen);
     gameData_.windowPt = &window_;
     bool imgui = ImGui::SFML::Init(window_);
     ImGui::GetIO().IniFilename = NULL;
@@ -58,6 +58,7 @@ void Game::setState(State::Type type) {
 
 void Game::Run() {
     sf::Clock clock;
+    srand(time(0));
     while (window_.isOpen()) {
         sf::Time dt = clock.restart();
         handleGlobalEvents();
@@ -97,13 +98,10 @@ void Game::debugWindow(const GameData& gameData, const ConfigData& configData, c
 
     sf::Vector2f squarePos = gameData_.square.GetPosition();
     std::string sqaurePosStr = "Square position\nX: " + std::to_string(squarePos.x) + " Y: " + std::to_string(squarePos.y);
-    sf::Vector2f camPos = gameData_.camera.GetPosition();
-    std::string camPosStr = "Camera position\nX: " + std::to_string(camPos.x) + " Y: " + std::to_string(camPos.y);
     if (ImGui::Begin("Debug info", NULL, windowFlags))
     {
         ImGui::Text(fpsStr.c_str(), NULL);
         ImGui::Text(sqaurePosStr.c_str(), NULL);
-        ImGui::Text(camPosStr.c_str(), NULL);
     }
     ImGui::End();
 }

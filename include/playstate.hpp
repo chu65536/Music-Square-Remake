@@ -21,6 +21,7 @@ private:
     GameData& gameData_;
     ConfigData& configData_;
     Conductor conductor_;
+    Camera camera_;
     float timer_ = 0.f;
     bool exit_ = false;
 };

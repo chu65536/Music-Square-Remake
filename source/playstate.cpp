@@ -7,8 +7,8 @@
 PlayState::PlayState(GameData& gameData, ConfigData& configData) :
     gameData_(gameData),
     configData_(configData),
-    conductor_(gameData.music) {
-    srand(time(0));
+    conductor_(gameData.music),
+    camera_(gameData.windowPt, gameData.square, configData.position, configData.windowSize) {
 }
 
 void PlayState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
@@ -31,6 +31,13 @@ void PlayState::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
             break;
         }
     }
+
+    if (event.type == sf::Event::MouseWheelScrolled) {
+        float delta = event.mouseWheelScroll.delta * 0.1f;
+        if (0.2f < camera_.zoom + delta && camera_.zoom + delta < 5.f) {
+            camera_.zoom += delta;
+        }
+    }
 }
 
 State::Type PlayState::Update(sf::Time dt) {
@@ -40,19 +47,16 @@ State::Type PlayState::Update(sf::Time dt) {
     }
 
     settingsWindow();
-    if (!gameData_.map.isEnd()) {
-        if (conductor_.GetStatus() == sf::SoundSource::Playing) {
-            timer_ += dt.asSeconds();
-        }
-
-        float dif = timer_ - conductor_.GetPlaybackPosition();
-        if (abs(dif) > 0.1f) {
-            timer_ = conductor_.GetPlaybackPosition();
-        }
+    if (!gameData_.map.isEnd() && conductor_.GetStatus() == sf::SoundSource::Playing) {
+        timer_ += dt.asSeconds();
+        conductor_.Normalize(timer_);
+    }
+    if (gameData_.map.isEnd()) {
+        timer_ = gameData_.map.GetNextPlatform(timer_).GetTime();
     }
     Platform curPlatform = gameData_.map.GetNextPlatform(timer_);
     gameData_.square.Update(timer_, curPlatform);
-    gameData_.camera.Update(dt);
+    camera_.Update(dt);
 
     return State::Type::None;
 }
@@ -64,8 +68,8 @@ void PlayState::Render(sf::RenderWindow& window) {
 
 void PlayState::settingsWindow() {
     if (ImGui::Begin("Live Settings")) {
-        ImGui::DragFloat("Camera zoom", &gameData_.camera.zoom, 0.05f, 0.1f, 1.f);
-        ImGui::DragFloat("Camera speed", &gameData_.camera.speed, 0.2f, 1.f, 10.f);
+        ImGui::DragFloat("Camera zoom", &camera_.zoom, 0.1f, 0.1f, 5.f);
+        ImGui::DragFloat("Camera speed", &camera_.speed, 0.2f, 1.f, 10.f);
     }
     ImGui::End();
 }

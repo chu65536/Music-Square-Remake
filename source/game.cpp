@@ -67,7 +67,7 @@ void Game::Run() {
         State::Type nextStateType = currentState_->Update(dt);
         setState(nextStateType);
 
-        window_.clear(); 
+        window_.clear(sf::Color(200, 200, 200)); 
         currentState_->Render(window_);
         if (configData_.debugWindow) {
             debugWindow(gameData_, configData_, dt);

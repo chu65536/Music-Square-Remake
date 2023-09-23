@@ -62,7 +62,7 @@ State::Type PlayState::Update(sf::Time dt) {
 }
 
 void PlayState::Render(sf::RenderWindow& window) {
-    gameData_.map.Render(window);
+    gameData_.map.Render(window, camera_);
     gameData_.square.Render(window);
 }
 

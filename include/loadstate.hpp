@@ -19,6 +19,7 @@ private:
     std::string findFileByExtension(const std::string& path, const std::string& ext) const;
     void readMidi();
     void readAudio();
+    
     GameData& gameData_;
     const ConfigData& configData_;
     std::thread loadThread_;

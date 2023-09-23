@@ -17,7 +17,7 @@ Platform::Platform(
     speedBefore_(speedBefore)
 {
     rect_.setPosition(position_);    
-    rect_.setFillColor(sf::Color::Green);
+    rect_.setFillColor(sf::Color::Blue);
 
     setDirection();
 }
@@ -76,7 +76,7 @@ sf::Vector2f Platform::GetPosition() const {
     return position_;
 }
 
-sf::RectangleShape Platform::GetRect() const {
+const sf::RectangleShape& Platform::GetRect() const {
     return rect_;
 }
 

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <chrono>
 #include <thread>
+#include <cmath>
 #include "map.hpp"
 
 
@@ -40,6 +41,7 @@ void Map::makePlatforms(const std::vector<double>& delays, std::mutex& m) {
                 while(currentSize != 1 && platforms_[currentSize - 1].TryAnotherDir() == false) {
                     platforms_.pop_back();
                     background_.pop_back();
+                    backgroundCover_.pop_back();
                     currentSize--;
                 }
                 if (currentSize == 1) {
@@ -56,7 +58,7 @@ void Map::makePlatforms(const std::vector<double>& delays, std::mutex& m) {
         }
         //std::this_thread::sleep_for(std::chrono::milliseconds(10));
     } 
-
+    makeGridMap();
     timerEnd = std::chrono::system_clock::now();  
     std::chrono::duration<double> elapsed_seconds = timerEnd - timerStart;
     std::cout << "Map gengerated, elapsed time: " << elapsed_seconds.count() << std::endl;
@@ -151,23 +153,44 @@ void Map::addBackground() {
     sf::RectangleShape back(sf::Vector2f(w, h));
     back.setPosition(X, Y);
     back.setFillColor(sf::Color::White); 
-    
+    sf::RectangleShape cover = back;
+    back.setOutlineThickness(2.f);
+    back.setOutlineColor(sf::Color::Black);
+
     background_.emplace_back(back);
+    backgroundCover_.emplace_back(cover);
 }
 
-void Map::Render(sf::RenderWindow& window) const {
-    for (size_t i = 0; i < background_.size(); ++i) {
-        window.draw(background_[i]);
-    } 
-    // for (size_t i = 0; i < platforms_.size(); ++i) {
-    //     window.draw(platforms_[i].GetRect());
-    // } 
+void Map::Render(sf::RenderWindow& window, const Camera& cam) {
+    sf::Vector2f size = cam.GetSize();
+    sf::Vector2f pos = cam.GetPosition();
+
+    int x1 = (pos.x - size.x / 2) / chunkSize.x;
+    int x2 = (pos.x + size.x / 2) / chunkSize.x;
+    int y1 = (pos.y - size.y / 2) / chunkSize.y;
+    int y2 = (pos.y + size.y / 2) / chunkSize.y;
+
+    for (int x = x1; x <= x2; ++x) {
+        for (int y = y1; y <= y2; ++y) {
+            for (auto shape: gridMap1_[{x, y}])
+                window.draw(shape);
+        }
+    }
+    for (int x = x1; x <= x2; ++x) {
+        for (int y = y1; y <= y2; ++y) {
+            for (auto shape: gridMap2_[{x, y}])
+                window.draw(shape);
+        }
+    }
 }
 
 void Map::Clear() {
     failed_ = false;
     platforms_.clear();
     background_.clear();
+    backgroundCover_.clear();
+    gridMap1_.clear();
+    gridMap2_.clear();
     curPlatform = 0;
 }
 
@@ -223,6 +246,7 @@ void Map::revert(std::unordered_map<int, int>& attempts, size_t& size) {
         attempts[size] = 0;
         platforms_.pop_back();
         background_.pop_back();
+        backgroundCover_.pop_back();
         size--;
     }
 }
@@ -240,5 +264,77 @@ sf::Vector2f Map::getAdaptedSpeed(float dt) const{
 
     speed *= k;
     return speed;
+}
+
+
+void rotatePoint(sf::Vector2f& point, const sf::Vector2f& center, float angle) {
+    angle = angle * M_PI / 180.f;
+    float x = cos(angle) * (point.x - center.x) - sin(angle) * (point.y - center.y);
+    float y = sin(angle) * (point.x - center.x) + cos(angle) * (point.y - center.y);
+    point.x = center.x + x;
+    point.y = center.y + y;
+}
+
+std::pair<sf::Vector2f, sf::Vector2f> getBounds(const sf::RectangleShape& shape) {
+    sf::Vector2f position = shape.getPosition();
+    sf::Vector2f topLeft = shape.getPosition() - shape.getOrigin();
+    std::cout << topLeft.x << ' ' << topLeft.y << '\n';
+    sf::Vector2f bottomRight = topLeft + shape.getSize();
+    float angle = shape.getRotation();
+    rotatePoint(topLeft, position, angle);
+    rotatePoint(bottomRight, position, angle);
+
+    return {topLeft, bottomRight};
+}
+
+void Map::makeGridMap() {
+    // for (size_t i = 0; i < platforms_.size(); ++i) {
+    //     std::pair<sf::Vector2f, sf::Vector2f> bounds = getBounds(platforms_[i].GetRect());
+    //     int x1 = bounds.first.x / chunkSize.x;
+    //     int x2 = bounds.second.x / chunkSize.x;
+    //     int y1 = bounds.first.y / chunkSize.y;
+    //     int y2 = bounds.second.y / chunkSize.y;
+
+    //     if (x1 > x2) std::swap(x1, x2);
+    //     if (y1 > y2) std::swap(y1, y2);
+
+    //     for (int x = x1; x <= x2; ++x) {
+    //         for (int y = y1; y <= y2; ++y) {
+    //             gridMap_[{x, y}].emplace_back(platforms_[i].GetRect());
+    //         }
+    //     }
+    // }
+    for (size_t i = 0; i < background_.size(); ++i) {
+        std::pair<sf::Vector2f, sf::Vector2f> bounds = getBounds(background_[i]);
+        int x1 = bounds.first.x / chunkSize.x;
+        int x2 = bounds.second.x / chunkSize.x;
+        int y1 = bounds.first.y / chunkSize.y;
+        int y2 = bounds.second.y / chunkSize.y;
+
+        if (x1 > x2) std::swap(x1, x2);
+        if (y1 > y2) std::swap(y1, y2);
+
+        for (int x = x1; x <= x2; ++x) {
+            for (int y = y1; y <= y2; ++y) {
+                gridMap1_[{x, y}].emplace_back(background_[i]);
+            }
+        }
+    }
+    for (size_t i = 0; i < backgroundCover_.size(); ++i) {
+        std::pair<sf::Vector2f, sf::Vector2f> bounds = getBounds(backgroundCover_[i]);
+        int x1 = bounds.first.x / chunkSize.x;
+        int x2 = bounds.second.x / chunkSize.x;
+        int y1 = bounds.first.y / chunkSize.y;
+        int y2 = bounds.second.y / chunkSize.y;
+
+        if (x1 > x2) std::swap(x1, x2);
+        if (y1 > y2) std::swap(y1, y2);
+
+        for (int x = x1; x <= x2; ++x) {
+            for (int y = y1; y <= y2; ++y) {
+                gridMap2_[{x, y}].emplace_back(backgroundCover_[i]);
+            }
+        }
+    }
 }
 

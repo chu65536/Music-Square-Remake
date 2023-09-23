@@ -7,7 +7,9 @@ void Square::Init(const ConfigData data) {
     rect_ = sf::RectangleShape(data.squareSize);
     rect_.setOrigin(data.squareSize.x / 2, data.squareSize.y / 2);
     rect_.setPosition(position_);
-    rect_.setFillColor(sf::Color::Red);
+    rect_.setFillColor(sf::Color::White);
+    rect_.setOutlineThickness(-2.f);
+    rect_.setOutlineColor(sf::Color::Black);
 }
 
 void Square::Update(float time, const Platform& platform) {

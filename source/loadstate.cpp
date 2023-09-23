@@ -42,8 +42,8 @@ State::Type LoadState::Update(sf::Time dt) {
 }
 
 void LoadState::Render(sf::RenderWindow& window) {
-    std::lock_guard<std::mutex> lock(m);
-    gameData_.map.Render(window);
+    // std::lock_guard<std::mutex> lock(m);
+    // gameData_.map.Render(window);
 }
 
 std::string LoadState::findFileByExtension(const std::string& path, const std::string& ext) const {

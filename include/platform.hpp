@@ -17,7 +17,7 @@ public:
     );
 
     sf::Vector2f GetPosition() const;
-    sf::RectangleShape GetRect() const;
+    const sf::RectangleShape& GetRect() const;
     float GetTime() const;
     Platform::Direction GetDirection() const;
     sf::Vector2f GetSpeedBefore() const;

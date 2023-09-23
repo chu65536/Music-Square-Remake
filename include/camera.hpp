@@ -1,7 +1,6 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <memory>
 #include "square.hpp"
 
 
@@ -11,6 +10,7 @@ public:
     Camera(sf::RenderWindow* window, const T& target, const sf::Vector2f& position, const sf::Vector2f& size);
     void Update(const sf::Time& dt);
     sf::Vector2f GetPosition() const;
+    sf::Vector2f GetSize() const;
 
     float zoom = 2.f;
     float speed = 5.f;

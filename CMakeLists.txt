@@ -46,6 +46,13 @@ FetchContent_Declare(
   SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libraries/Midifile
 )
 
+# Candle
+FetchContent_Declare(
+  candle
+  GIT_REPOSITORY https://github.com/MiguelMJ/Candle.git
+  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libraries/Candle
+)
+
 # Building
 # SFML
 FetchContent_MakeAvailable(sfml)
@@ -62,27 +69,33 @@ FetchContent_MakeAvailable(imgui-sfml)
 # Midifile
 FetchContent_MakeAvailable(midifile)
 
+# Candle
+FetchContent_MakeAvailable(candle)
+
 add_executable(sfml-app 
   source/main.cpp
-  source/game.cpp
-  source/menustate.cpp
-  source/configstate.cpp
-  source/selectionstate.cpp
-  source/loadstate.cpp
-  source/playstate.cpp
-  source/parser.cpp
-  source/conductor.cpp
-  source/map.cpp
-  source/gamedata.cpp
-  source/square.cpp
-  source/camera.cpp
-  source/platform.cpp
+  source/Game/Game.cpp
+  source/Game/map.cpp
+  source/Game/Square.cpp
+  source/Game/Platform.cpp
+  source/States/Menu.cpp
+  source/States/Settings.cpp
+  source/States/SongSelection.cpp
+  source/States/Load.cpp
+  source/States/Play.cpp
+  source/Adds/Camera.cpp
+  source/Adds/Conductor.cpp
+  source/Adds/Parser.cpp
+  source/Adds/Math.cpp
+  source/Data/GameData.cpp
+  source/Data/UserData.cpp
 )
 target_include_directories(
   sfml-app
   PRIVATE
   include
   libraries/Midifile/include
+  libraries/Candle/include
 )
 target_link_libraries(
   sfml-app
@@ -93,4 +106,5 @@ target_link_libraries(
   sfml-audio
   ImGui-SFML::ImGui-SFML
   midifile
+  Candle-s
 )

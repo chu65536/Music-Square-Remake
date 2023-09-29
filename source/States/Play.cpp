@@ -3,11 +3,10 @@
 #include "States/Play.hpp"
 
 
-Play::Play(GameData& gameData, UserData& userData) :
+Play::Play(GameData& gameData) :
     m_gameData(gameData),
-    m_userData(userData),
-    m_conductor(gameData.music),
-    m_camera(*gameData.windowPt, gameData.square, userData.position, userData.windowSize) {
+    m_conductor(gameData.songData.music),
+    m_camera(*gameData.windowPt, gameData.square, gameData.position, gameData.windowSize) {
 }
 
 void Play::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
@@ -52,7 +51,7 @@ State::Type Play::Update(const sf::Time& dt) {
     if (m_gameData.map.isEnd()) {
         m_timer = m_gameData.map.GetNextPlatform(m_timer).GetTime();
     }
-    Platform curPlatform = m_gameData.map.GetNextPlatform(m_timer);
+    Platform& curPlatform = m_gameData.map.GetNextPlatform(m_timer);
     m_gameData.square.Update(m_timer, curPlatform);
     m_camera.Update(dt);
 

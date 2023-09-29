@@ -1,10 +1,8 @@
 #pragma once
 
-#include <vector>
-#include "MidiFile.h"
+#include "Data/SongData.hpp"
 
 
-class Parser {
-public:
-    std::vector<double> Parse(smf::MidiFile& file);
-};
+namespace Parser {
+void Parse(SongData& data);
+}

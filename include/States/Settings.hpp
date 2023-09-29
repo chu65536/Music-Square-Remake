@@ -1,16 +1,16 @@
 #pragma once
 
 #include "States/State.hpp"
-#include "Data/UserData.hpp"
+#include "Data/GameData.hpp"
 
 class Settings : public State {
 public:
-    Settings(UserData& data);
+    Settings(GameData& data);
     State::Type Update(const sf::Time& dt) override;
     void HandleEvents(sf::RenderWindow& window, sf::Event& event) override;
     void Render(sf::RenderWindow& window) override;
 private:
     void configMenu();
-    UserData& m_userData;
+    GameData& m_gameData;
     bool m_exit = false;
 };

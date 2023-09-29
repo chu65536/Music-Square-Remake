@@ -1,22 +1,35 @@
-#include <set>
+#include <unordered_map>
 #include "MidiFile.h"
 #include "Adds/Parser.hpp"
+#include "Data/SongData.hpp"
+#include "Adds/Debug.hpp"
 
 
-std::vector<double> Parser::Parse(smf::MidiFile& file) {
-    file.doTimeAnalysis();
-    file.linkNotePairs();
+void Parser::Parse(SongData& data) {
+    DEBUG_TIMER_START();
+    data.midi.doTimeAnalysis();
+    data.midi.linkNotePairs();
+    data.midi.joinTracks();
 
-    size_t tracks = file.getTrackCount();
-    std::set<double> delays;
-    for (size_t track = 0; track < tracks; ++track) {
-        for (size_t event = 0; event < file[track].size(); ++event) {
-            if (file[track][event].isNoteOn())
-                delays.insert(file[track][event].seconds);
-
+    std::unordered_map<uint, int> mp;
+    int num = 1;
+    for (size_t event = 0; event < data.midi[0].size(); ++event) {
+        if (data.midi[0][event].isNoteOn()) {
+            uint note = data.midi[0][event].getKeyNumber();
+            if (!mp[note]) {
+                mp[note] = num;
+                num++;
+            }
+            double time = data.midi[0][event].seconds;
+            if (data.delays.size() == 0) {
+                data.delays.emplace_back(time);
+                data.notes.emplace_back(mp[note]);
+            }
+            if (data.delays[data.delays.size() - 1] != time) {
+                data.delays.emplace_back(time);
+                data.notes.emplace_back(mp[note]);
+            }
         }
     }
-
-    std::vector<double> ret(delays.begin(), delays.end()); 
-    return ret;
+    DEBUG_TIMER_STOP("Midi parsed");
 }

@@ -33,7 +33,7 @@ State::Type SongSelection::Update(const sf::Time& dt) {
     for (size_t i = 0; i < m_loadedSongs.size(); ++i) {   
         std::string song = m_loadedSongs[i];
         if (ImGui::Button(song.c_str(), ImVec2(-FLT_MIN, 0.0f))) {
-            m_gameData.songName = song;
+            m_gameData.songData.chosenSongName = song;
             return State::Type::Load;
         }
     }

@@ -4,12 +4,11 @@
 #include <mutex>
 #include "States/State.hpp"
 #include "Data/GameData.hpp"
-#include "Data/UserData.hpp"
 
 
 class Load : public State {
 public:
-    Load(GameData& gameData, const UserData& configData);
+    Load(GameData& gameData);
     State::Type Update(const sf::Time& dt) override;
     void HandleEvents(sf::RenderWindow& window, sf::Event& event) override;
     void Render(sf::RenderWindow& window) override;
@@ -20,7 +19,6 @@ private:
     void readAudio();
     
     GameData& m_gameData;
-    const UserData& m_configData;
     std::thread m_loadThread;
     std::mutex m_loadMutex;
     bool m_isLoaded = false;

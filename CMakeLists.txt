@@ -75,7 +75,7 @@ FetchContent_MakeAvailable(candle)
 add_executable(sfml-app 
   source/main.cpp
   source/Game/Game.cpp
-  source/Game/map.cpp
+  source/Game/Map.cpp
   source/Game/Square.cpp
   source/Game/Platform.cpp
   source/States/Menu.cpp
@@ -87,8 +87,8 @@ add_executable(sfml-app
   source/Adds/Conductor.cpp
   source/Adds/Parser.cpp
   source/Adds/Math.cpp
+  source/Adds/Debug.cpp
   source/Data/GameData.cpp
-  source/Data/UserData.cpp
 )
 target_include_directories(
   sfml-app

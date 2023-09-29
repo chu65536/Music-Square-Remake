@@ -1,24 +1,25 @@
+#include <iostream>
 #include <algorithm>
 #include "Game/Platform.hpp"
 #include "Adds/Math.hpp"
 
 
-Platform::Platform(
-    const sf::Vector2f& position,
-    std::vector<Platform::Direction> dirs,
-    double time,
-    const sf::Vector2f& speedBefore,
-    const UserData& data
-)   :
-    m_position(position),
-    m_possibleDirections(dirs),
-    m_time(time),
-    m_speedBefore(speedBefore),
+Platform::Platform(Data&& data): 
     m_data(data),
-    m_size(data.platformSize)
+    m_position(data.position),
+    m_time(data.time),
+    m_possibleDirections(data.directions),
+    m_color(data.color),
+    m_speedBefore(data.speedBefore),
+    m_active(false)
 {
-    m_rect.setPosition(m_position);    
-    m_rect.setFillColor(data.platformColor);
+    m_rect.setPosition(m_position); 
+    float k = 0.2f;
+    sf::Color col = data.color;
+    col.r *= k; col.g *= k; col.b *= k;   
+    m_rect.setFillColor(col);
+    m_lightSource.setPosition(m_position);
+    m_lightSource.setColor(m_color);
 
     setDirection();
 }
@@ -32,31 +33,38 @@ void Platform::setDirection() {
     m_possibleDirections.erase(std::remove(m_possibleDirections.begin(), m_possibleDirections.end(), m_direction), m_possibleDirections.end());
     switch(m_direction) {
     case Platform::Direction::Down:
-        m_size = sf::Vector2f(m_data.squareSize.x, m_data.platformSize.y);
+        m_size = sf::Vector2f(std::max(m_data.squareSize.x, m_data.size.x), m_data.size.y);
         m_rect.setSize(m_size);
         m_rect.setOrigin(m_size.x / 2, -m_data.squareSize.y / 2);
         m_rect.setRotation(0.f);
+        m_lightSource.setOrigin(sf::Vector2f(0.f, -(m_data.squareSize.y + m_data.size.y) / 2) + sf::Vector2f(400.f, 400.f));
+        m_lightSource.setRotation(0.f);
         break;
     case Platform::Direction::Left:
-        m_size = sf::Vector2f(m_data.squareSize.y, m_data.platformSize.y);
+        m_size = sf::Vector2f(std::max(m_data.squareSize.y, m_data.size.x), m_data.size.y);
         m_rect.setSize(m_size);
         m_rect.setOrigin(m_size.x / 2, -m_data.squareSize.x / 2);
         m_rect.setRotation(90.f);
+        m_lightSource.setOrigin(sf::Vector2f(0.f, -(m_data.squareSize.x + m_data.size.y) / 2) + sf::Vector2f(400.f, 400.f));
+        m_lightSource.setRotation(90.f);
         break;
     case Platform::Direction::Up:
-        m_size = sf::Vector2f(m_data.squareSize.x, m_data.platformSize.y);
+        m_size = sf::Vector2f(std::max(m_data.squareSize.x, m_data.size.x), m_data.size.y);
         m_rect.setSize(m_size);
         m_rect.setOrigin(m_size.x / 2, -m_data.squareSize.y / 2);
         m_rect.setRotation(180.f);
+        m_lightSource.setOrigin(sf::Vector2f(0.f, -(m_data.squareSize.y + m_data.size.y) / 2) + sf::Vector2f(400.f, 400.f));
+        m_lightSource.setRotation(180.f);
         break;
     case Platform::Direction::Right: 
-        m_size = sf::Vector2f(m_data.squareSize.y, m_data.platformSize.y);
+        m_size = sf::Vector2f(std::max(m_data.squareSize.y, m_data.size.x), m_data.size.y);
         m_rect.setSize(m_size);
         m_rect.setOrigin(m_size.x / 2, -m_data.squareSize.x / 2);
         m_rect.setRotation(270.f);
+        m_lightSource.setOrigin(sf::Vector2f(0.f, -(m_data.squareSize.x + m_data.size.y) / 2) + sf::Vector2f(400.f, 400.f));
+        m_lightSource.setRotation(270.f);
         break;
     }
-
     setSpeedAfter();
     m_bounds = Math::GetBounds(m_rect);
 }
@@ -87,6 +95,11 @@ bool Platform::TryAnotherDirection() {
     return true;
 }
 
+void Platform::Render(sf::RenderWindow& window) {
+    window.draw(m_lightSource);
+    window.draw(m_rect);
+}
+
 sf::Vector2f Platform::GetPosition() const {
     return m_position;
 }
@@ -113,4 +126,20 @@ sf::Vector2f Platform::GetSpeedAfter() const {
 
 const std::vector<sf::Vector2f>& Platform::GetBounds() const {
     return m_bounds;
+}
+
+void Platform::AddCandleBounds(candle::EdgeVector& pool) const{
+    for (size_t i = 1; i < m_bounds.size(); ++i) {
+        pool.emplace_back(m_bounds[i - 1], m_bounds[i]);
+    }
+    pool.emplace_back(m_bounds[m_bounds.size() - 1], m_bounds[0]);
+}
+
+void Platform::MakeActive() {
+    if (m_active) return;
+
+    m_active = true;
+    m_rect.setFillColor(m_color);
+    m_lightSource.setRange(50.f);   
+    m_lightSource.setIntensity(0.7f);
 }

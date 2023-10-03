@@ -5,6 +5,7 @@
 #include <map>
 #include "Game/Platform.hpp"
 #include "Adds/Camera.hpp"
+#include "Data/SettingsData.hpp"
 #include "Data/SongData.hpp"
 
 
@@ -12,7 +13,7 @@ struct GameData;
 
 class Map {
 public:
-    void Init(const GameData* data);
+    void Init(const SettingsData* settingsData, const SongData* songData);
     void Render(sf::RenderWindow& window, const Camera& cam);
     void Clear();
     const std::vector<Platform>& GetPlatforms() const;
@@ -36,7 +37,7 @@ private:
     void addNextPlatform(const Platform& platform);
     sf::RectangleShape makeRectangle(const Platform& platform1, const Platform& platform2);
 
-    const GameData* m_dataPt;
+    const SettingsData* m_dataPt;
     const SongData* m_SongDataPt;
     size_t m_curPlatform = 0;
     std::vector<Platform> m_platforms;

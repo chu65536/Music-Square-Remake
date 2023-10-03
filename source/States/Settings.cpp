@@ -2,9 +2,8 @@
 #include "imgui.h"
 #include "imgui-SFML.h"
 
-Settings::Settings(GameData& data) :
-    m_gameData(data) {    
-}
+Settings::Settings(SettingsData& settingsData) :
+    m_settingsData(settingsData) {}
 
 void Settings::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
@@ -32,13 +31,13 @@ void Settings::Render(sf::RenderWindow& window) {
 
 void Settings::configMenu() {
     ImGui::ShowDemoWindow();
-    ImGui::InputFloat2("Square size", &m_gameData.squareSizeVector[0]);
-    ImGui::InputFloat2("Square speed", &m_gameData.squareSpeedVector[0]);
-    ImGui::InputFloat2("Platform size", &m_gameData.platformSizeVector[0]);
-    ImGui::InputFloat2("Chunk size", &m_gameData.chunkSizeVector[0]);
-    ImGui::ColorEdit3("Sqaure color", &m_gameData.squareColorVector[0]);
-    ImGui::ColorEdit3("Walls color", &m_gameData.wallsColorVector[0]);
-    ImGui::ColorEdit3("Background color", &m_gameData.backgroundColorVector[0]);
-    m_gameData.Update();
+    ImGui::InputFloat2("Square size", &m_settingsData.squareSizeVector[0]);
+    ImGui::InputFloat2("Square speed", &m_settingsData.squareSpeedVector[0]);
+    ImGui::InputFloat2("Platform size", &m_settingsData.platformSizeVector[0]);
+    ImGui::InputFloat2("Chunk size", &m_settingsData.chunkSizeVector[0]);
+    ImGui::ColorEdit3("Sqaure color", &m_settingsData.squareColorVector[0]);
+    ImGui::ColorEdit3("Walls color", &m_settingsData.wallsColorVector[0]);
+    ImGui::ColorEdit3("Background color", &m_settingsData.backgroundColorVector[0]);
+    m_settingsData.Update();
 }
 

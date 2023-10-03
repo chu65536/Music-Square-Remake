@@ -83,12 +83,16 @@ add_executable(sfml-app
   source/States/SongSelection.cpp
   source/States/Load.cpp
   source/States/Play.cpp
+  source/States/About.cpp
   source/Adds/Camera.cpp
   source/Adds/Conductor.cpp
   source/Adds/Parser.cpp
   source/Adds/Math.cpp
   source/Adds/Debug.cpp
   source/Data/GameData.cpp
+  source/Data/SettingsData.cpp
+  source/Data/InterfaceData.cpp
+  source/Game/BackgroundScene.cpp
 )
 target_include_directories(
   sfml-app

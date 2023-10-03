@@ -8,9 +8,9 @@
 #include "Adds/Debug.hpp"
 
 
-void Map::Init(const GameData* data) {
-    m_dataPt = data;
-    m_SongDataPt = &data->songData;
+void Map::Init(const SettingsData* settingsData, const SongData* songData) {
+    m_dataPt = settingsData;
+    m_SongDataPt = songData;
     makePlatforms();
 }
 
@@ -36,19 +36,10 @@ void Map::makePlatforms() {
     } 
     makeGridMap();
     DEBUG_TIMER_STOP("Map generated");
-    for (int i = 0; i < m_platforms.size(); ++i) {
-        for (int j = i + 1; j < m_platforms.size(); ++j) {
-            sf::FloatRect rect1 = m_platforms[i].GetRect().getGlobalBounds();
-            sf::FloatRect rect2 = m_platforms[j].GetRect().getGlobalBounds();
-            if (rect1.intersects(rect2)) {
-                std::cout << "COLLISION: " << i << ' ' << j << std::endl;
-            }
-        }
-    }
 }
 
 void Map::makeFirstPlatform() {
-    sf::Vector2f position = m_dataPt->position;
+    sf::Vector2f position (0.f, 0.f);
     sf::Vector2f speed = m_dataPt->squareSpeed;
     speed.x *= (rand() % 2 ? -1: 1);
     speed.y *= (rand() % 2 ? -1: 1);

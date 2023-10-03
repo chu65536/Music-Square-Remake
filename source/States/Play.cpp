@@ -3,10 +3,10 @@
 #include "States/Play.hpp"
 
 
-Play::Play(GameData& gameData) :
+Play::Play(GameData& gameData, const SettingsData& settingsData) :
     m_gameData(gameData),
     m_conductor(gameData.songData.music),
-    m_camera(*gameData.windowPt, gameData.square, gameData.position, gameData.windowSize) {
+    m_camera(*gameData.windowPt, gameData.square, sf::Vector2f(0.f, 0.f), settingsData.windowSize) {
 }
 
 void Play::HandleEvents(sf::RenderWindow& window, sf::Event& event) {

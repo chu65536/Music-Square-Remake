@@ -1,21 +1,17 @@
 #include <iostream>
 #include "Game/Square.hpp"
 #include "Adds/Math.hpp"
-#include "Data/GameData.hpp"
 
 
-void Square::Init(const GameData& data) {
-    m_position = data.position;
-    m_speed_ = data.squareSpeed;
-    m_rect = sf::RectangleShape(data.squareSize);
-    m_rect.setOrigin(data.squareSize.x / 2, data.squareSize.y / 2);
+void Square::Init(const SettingsData& settingsData) {
+    m_speed_ = settingsData.squareSpeed;
+    m_rect = sf::RectangleShape(settingsData.squareSize);
+    m_rect.setOrigin(settingsData.squareSize.x / 2, settingsData.squareSize.y / 2);
     m_rect.setPosition(m_position);
-    m_rect.setFillColor(data.squareColor);
-    //m_rect.setOutlineThickness(-data.squareOutlineThickness);
-    //m_rect.setOutlineColor(data.squareOutlineColor);
+    m_rect.setFillColor(settingsData.squareColor);
+    //m_rect.setOutlineThickness(-settingsData.squareOutlineThickness);
+    //m_rect.setOutlineColor(settingsData.squareOutlineColor);
     m_bounds = Math::GetBounds(m_rect);
-    m_lightSource.setRange(40.f);
-    m_lightSource.setColor(data.squareColor);
 }
 
 void Square::Update(float time, Platform& platform) {
@@ -40,11 +36,9 @@ void Square::Update(float time, Platform& platform) {
     }
     m_position += m_speed_ * deltaTime;
     m_rect.setPosition(m_position);
-    m_lightSource.setPosition(m_position);
 }
 
 void Square::Render(sf::RenderWindow& window) {
-    window.draw(m_lightSource);
     window.draw(m_rect);
 }
 
@@ -56,6 +50,3 @@ const sf::Vector2f& Square::GetPositionRef() const {
     return m_position;
 }
 
-void Square::CastLight(candle::EdgeVector& edges) {
-    m_lightSource.castLight(edges.begin(), edges.end());
-}

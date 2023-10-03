@@ -33,6 +33,7 @@ public:
 private:
     void setDirection();
     void setSpeedAfter();
+    void rotate();
 
     const Data m_data;
     const sf::Vector2f m_position;
@@ -44,7 +45,6 @@ private:
     const sf::Vector2f m_speedBefore;
     sf::Vector2f m_speedAfter;
     std::vector<Direction> m_possibleDirections;
-    candle::RadialLight m_lightSource;
     std::vector<sf::Vector2f> m_bounds;
     bool m_active = false;;
 };

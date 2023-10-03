@@ -14,12 +14,10 @@ Platform::Platform(Data&& data):
     m_active(false)
 {
     m_rect.setPosition(m_position); 
-    float k = 0.2f;
+    float k = 0.f;
     sf::Color col = data.color;
     col.r *= k; col.g *= k; col.b *= k;   
     m_rect.setFillColor(col);
-    m_lightSource.setPosition(m_position);
-    m_lightSource.setColor(m_color);
 
     setDirection();
 }
@@ -31,40 +29,7 @@ void Platform::setDirection() {
 
     m_direction = m_possibleDirections[rand() % m_possibleDirections.size()];
     m_possibleDirections.erase(std::remove(m_possibleDirections.begin(), m_possibleDirections.end(), m_direction), m_possibleDirections.end());
-    switch(m_direction) {
-    case Platform::Direction::Down:
-        m_size = sf::Vector2f(std::max(m_data.squareSize.x, m_data.size.x), m_data.size.y);
-        m_rect.setSize(m_size);
-        m_rect.setOrigin(m_size.x / 2, -m_data.squareSize.y / 2);
-        m_rect.setRotation(0.f);
-        m_lightSource.setOrigin(sf::Vector2f(0.f, -(m_data.squareSize.y + m_data.size.y) / 2) + sf::Vector2f(400.f, 400.f));
-        m_lightSource.setRotation(0.f);
-        break;
-    case Platform::Direction::Left:
-        m_size = sf::Vector2f(std::max(m_data.squareSize.y, m_data.size.x), m_data.size.y);
-        m_rect.setSize(m_size);
-        m_rect.setOrigin(m_size.x / 2, -m_data.squareSize.x / 2);
-        m_rect.setRotation(90.f);
-        m_lightSource.setOrigin(sf::Vector2f(0.f, -(m_data.squareSize.x + m_data.size.y) / 2) + sf::Vector2f(400.f, 400.f));
-        m_lightSource.setRotation(90.f);
-        break;
-    case Platform::Direction::Up:
-        m_size = sf::Vector2f(std::max(m_data.squareSize.x, m_data.size.x), m_data.size.y);
-        m_rect.setSize(m_size);
-        m_rect.setOrigin(m_size.x / 2, -m_data.squareSize.y / 2);
-        m_rect.setRotation(180.f);
-        m_lightSource.setOrigin(sf::Vector2f(0.f, -(m_data.squareSize.y + m_data.size.y) / 2) + sf::Vector2f(400.f, 400.f));
-        m_lightSource.setRotation(180.f);
-        break;
-    case Platform::Direction::Right: 
-        m_size = sf::Vector2f(std::max(m_data.squareSize.y, m_data.size.x), m_data.size.y);
-        m_rect.setSize(m_size);
-        m_rect.setOrigin(m_size.x / 2, -m_data.squareSize.x / 2);
-        m_rect.setRotation(270.f);
-        m_lightSource.setOrigin(sf::Vector2f(0.f, -(m_data.squareSize.x + m_data.size.y) / 2) + sf::Vector2f(400.f, 400.f));
-        m_lightSource.setRotation(270.f);
-        break;
-    }
+    rotate();
     setSpeedAfter();
     m_bounds = Math::GetBounds(m_rect);
 }
@@ -96,7 +61,6 @@ bool Platform::TryAnotherDirection() {
 }
 
 void Platform::Render(sf::RenderWindow& window) {
-    window.draw(m_lightSource);
     window.draw(m_rect);
 }
 
@@ -140,6 +104,33 @@ void Platform::MakeActive() {
 
     m_active = true;
     m_rect.setFillColor(m_color);
-    m_lightSource.setRange(50.f);   
-    m_lightSource.setIntensity(0.7f);
+}
+
+void Platform::rotate() {
+    switch(m_direction) {
+    case Platform::Direction::Down:
+        m_size = sf::Vector2f(std::max(m_data.squareSize.x, m_data.size.x), m_data.size.y);
+        m_rect.setSize(m_size);
+        m_rect.setOrigin(m_size.x / 2, -m_data.squareSize.y / 2);
+        m_rect.setRotation(0.f);
+        break;
+    case Platform::Direction::Left:
+        m_size = sf::Vector2f(std::max(m_data.squareSize.y, m_data.size.x), m_data.size.y);
+        m_rect.setSize(m_size);
+        m_rect.setOrigin(m_size.x / 2, -m_data.squareSize.x / 2);
+        m_rect.setRotation(90.f);
+        break;
+    case Platform::Direction::Up:
+        m_size = sf::Vector2f(std::max(m_data.squareSize.x, m_data.size.x), m_data.size.y);
+        m_rect.setSize(m_size);
+        m_rect.setOrigin(m_size.x / 2, -m_data.squareSize.y / 2);
+        m_rect.setRotation(180.f);
+        break;
+    case Platform::Direction::Right: 
+        m_size = sf::Vector2f(std::max(m_data.squareSize.y, m_data.size.x), m_data.size.y);
+        m_rect.setSize(m_size);
+        m_rect.setOrigin(m_size.x / 2, -m_data.squareSize.x / 2);
+        m_rect.setRotation(270.f);
+        break;
+    }
 }

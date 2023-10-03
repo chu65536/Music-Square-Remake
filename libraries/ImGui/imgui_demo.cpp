@@ -2628,7 +2628,7 @@ static void ShowDemoWindowLayout()
         ImGui::DragFloat("##float5a", &f);
         if (show_indented_items)
         {
-            ImGui::Indent();
+        ImGui::Indent();
             ImGui::DragFloat("float (indented)##5b", &f);
             ImGui::Unindent();
         }

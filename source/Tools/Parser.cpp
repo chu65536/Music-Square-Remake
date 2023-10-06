@@ -1,8 +1,8 @@
 #include <unordered_map>
 #include "MidiFile.h"
-#include "Adds/Parser.hpp"
+#include "Tools/Parser.hpp"
 #include "Data/SongData.hpp"
-#include "Adds/Debug.hpp"
+#include "Tools/Debug.hpp"
 
 
 void Parser::Parse(SongData& data) {

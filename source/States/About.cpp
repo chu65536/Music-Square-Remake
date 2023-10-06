@@ -17,7 +17,7 @@ State::Type About::Update(const sf::Time& dt) {
     if (m_exit) {
         return State::Type::Menu;
     }
-
+    ImGui::ShowDemoWindow();
     ImGui::Text("Text about this project...");
     return State::Type::None;
 }

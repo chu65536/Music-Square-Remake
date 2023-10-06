@@ -1,5 +1,5 @@
-#include "Adds/Camera.hpp"
-#include "Adds/Math.hpp"
+#include "Game/Camera.hpp"
+#include "Tools/Math.hpp"
 
 
 void Camera::Update(const sf::Time& dt) {

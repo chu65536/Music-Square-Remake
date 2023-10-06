@@ -13,6 +13,7 @@
 Game::Game() {
     m_settingsData.Update();
     m_window.create(sf::VideoMode(m_settingsData.windowSize.x, m_settingsData.windowSize.y), "Music Square Remake", sf::Style::Fullscreen);
+    // m_window.create(sf::VideoMode(m_settingsData.windowSize.x, m_settingsData.windowSize.y), "Music Square Remake");
     m_gameData.windowPt = &m_window;
     m_currentState = std::make_unique<Menu>(m_interfaceData);
     State::Type m_currentStateType = State::Type::Menu;
@@ -40,8 +41,8 @@ void Game::handleEvents() {
         if (event.type == sf::Event::KeyPressed) {
             sf::Keyboard::Key key = event.key.code;
             switch(key) {
-            case sf::Keyboard::D:
-                m_settingsData.debugWindow = !m_settingsData.debugWindow;
+            case sf::Keyboard::F:
+                m_settingsData.fpsCounter = !m_settingsData.fpsCounter;
                 break; 
             }
         }
@@ -53,19 +54,22 @@ void Game::update() {
     sf::Time deltaTime = m_clock.restart();
     ImGui::SFML::Update(m_window, deltaTime);
     m_interfaceData.Update();
-    if (m_settingsData.debugWindow) {
-        debugWindow(deltaTime);
+    if (m_settingsData.fpsCounter) {
+        fpsCounter(deltaTime);
     }
     if (m_currentStateType != State::Type::Play) {
         m_backgroundScene.Update(deltaTime);
     }
     State::Type nextStateType = m_currentState->Update(deltaTime);
     setState(nextStateType);
+    if (nextStateType == State::Type::Play) {
+        m_screenColor = m_settingsData.wallsColor;
+    }
 }
 
 void Game::render() {
     m_window.clear(m_settingsData.wallsColor);
-    if (m_currentStateType != State::Type::Play) {
+    if (m_currentStateType != State::Type::Play && m_currentStateType != State::Type::Load && m_currentStateType != State::Type::SongSelection) {
         m_backgroundScene.Render(m_window);
     }
     m_currentState->Render(m_window);
@@ -89,7 +93,7 @@ void Game::setState(State::Type type) {
         m_currentStateType = State::Type::SongSelection;
         break;
     case State::Type::Settings:
-        m_currentState = std::make_unique<Settings>(m_settingsData);
+        m_currentState = std::make_unique<Settings>(m_settingsData, m_interfaceData);
         m_currentStateType = State::Type::Settings;
         break;
     case State::Type::Load:
@@ -124,7 +128,14 @@ void Game::initImGui() {
     }
 }
 
-void Game::debugWindow(const sf::Time& dt) const {
-    // todo
+void Game::fpsCounter(const sf::Time& dt) const {
+    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoMove;
+    ImGui::SetNextWindowPos(m_interfaceData.workPos, ImGuiCond_Always);
+    std::string fps = std::to_string(1.f / dt.asSeconds());
+    if (ImGui::Begin("Example: Simple overlay", NULL, window_flags))
+    {
+        ImGui::Text(fps.c_str());
+    }
+    ImGui::End();
 }
 

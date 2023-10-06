@@ -1,4 +1,4 @@
-#include "Adds/Debug.hpp"
+#include "Tools/Debug.hpp"
 
 
 namespace Debug {

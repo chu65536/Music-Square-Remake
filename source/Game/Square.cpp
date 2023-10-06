@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Game/Square.hpp"
-#include "Adds/Math.hpp"
+#include "Tools/Math.hpp"
 
 
 void Square::Init(const SettingsData& settingsData) {
@@ -9,8 +9,8 @@ void Square::Init(const SettingsData& settingsData) {
     m_rect.setOrigin(settingsData.squareSize.x / 2, settingsData.squareSize.y / 2);
     m_rect.setPosition(m_position);
     m_rect.setFillColor(settingsData.squareColor);
-    //m_rect.setOutlineThickness(-settingsData.squareOutlineThickness);
-    //m_rect.setOutlineColor(settingsData.squareOutlineColor);
+    m_rect.setOutlineThickness(settingsData.squareOutlineThickness);
+    m_rect.setOutlineColor(settingsData.squareOutlineColor);
     m_bounds = Math::GetBounds(m_rect);
 }
 

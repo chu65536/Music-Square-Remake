@@ -4,8 +4,8 @@
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "States/Load.hpp"
-#include "Adds/Parser.hpp"
-#include "Adds/Debug.hpp"
+#include "Tools/Parser.hpp"
+#include "Tools/Debug.hpp"
 
 
 Load::Load(GameData& gameData, const SettingsData& settingsData, const InterfaceData& interfaceData) :

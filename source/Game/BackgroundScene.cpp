@@ -1,45 +1,90 @@
 #include "Game/BackgroundScene.hpp"
 
 
+// Scene
 void BackgroundScene::Init(const SettingsData& settingsData) {
     m_settingsDataPt = &settingsData;
-    m_backgroundSize = sf::Vector2f(500.f, 500.f);
-    m_background.setSize(m_backgroundSize);
-    m_background.setOrigin(m_backgroundSize / 2.f);
-    m_squarePosition.x = -m_backgroundSize.x / 2 + m_settingsDataPt->squareSize.x / 2;
-    m_squarePosition.y = 0.f;
-    m_dir = sf::Vector2i(1, 1);
-    m_squareSize = m_settingsDataPt->squareSize;
+    m_square.Init(settingsData);
+    m_background.Init(settingsData);
 }
 
 void BackgroundScene::Update(const sf::Time& time) {
-    m_squareSize = m_settingsDataPt->squareSize;
-    m_square.setSize(m_settingsDataPt->squareSize);
-    m_square.setOrigin(m_settingsDataPt->squareSize / 2.f);
-    m_square.setFillColor(m_settingsDataPt->squareColor);
-    m_background.setFillColor(m_settingsDataPt->backgroundColor);
-    updateSquare(m_settingsDataPt->squareSpeed, time.asSeconds());
+    m_background.Update();
+    m_square.Update(time, sf::Vector2f(m_settingsDataPt->windowSize));
 }
 
 void BackgroundScene::Render(sf::RenderWindow& window) {
-    window.draw(m_background);
-    window.draw(m_square);
+    m_background.Render(window);
+    m_square.Render(window);
 }
 
-void BackgroundScene::updateSquare(const sf::Vector2f& speed, float dt) {
-    if (m_squarePosition.x + m_squareSize.x / 2 >= m_backgroundSize.x / 2) {
-        m_dir.x = -1; 
+
+// Square
+void DemoSquare::Init(const SettingsData& settingsData) {
+    sf::Vector2f windowSz = sf::Vector2f(settingsData.windowSize);
+    m_sizePt = &settingsData.squareSize;
+    m_position = sf::Vector2f(windowSz.x / 3.f + m_sizePt->x / 2.f, windowSz.y / 2.f);
+    m_speedPt = &settingsData.squareSpeed;
+    m_colorPt = &settingsData.squareColor;
+    m_outlineThicknessPt = &settingsData.squareOutlineThickness;
+    m_outlineColorPt = &settingsData.squareOutlineColor;
+    m_rect.setOrigin(settingsData.squareSize / 2.f);
+    m_rect.setPosition(m_position);
+    m_rect.setSize(*m_sizePt);
+    m_rect.setFillColor(*m_colorPt);
+    m_rect.setOutlineThickness(*m_outlineThicknessPt);
+    m_rect.setOutlineColor(*m_outlineColorPt);
+
+    dir = sf::Vector2f(1, 1);
+}
+
+void DemoSquare::Update(const sf::Time& dt, const sf::Vector2f& windowSize) {
+    m_position.x += m_speedPt->x * dir.x * dt.asSeconds();
+    m_position.y += m_speedPt->y * dir.y * dt.asSeconds();
+    m_rect.setOrigin(*m_sizePt / 2.f);
+    m_rect.setPosition(m_position);
+    m_rect.setFillColor(*m_colorPt);
+    m_rect.setSize(*m_sizePt);
+    m_rect.setOutlineThickness(*m_outlineThicknessPt);
+    m_rect.setOutlineColor(*m_outlineColorPt);
+    if (m_position.y + m_sizePt->y / 2.f >= windowSize.y) {
+        dir.y = -1;
     }
-    if (m_squarePosition.x - m_squareSize.x / 2 <= -m_backgroundSize.x / 2) {
-        m_dir.x = 1; 
+    if (m_position.x + m_sizePt->x / 2.f >= windowSize.x) {
+        dir.x = -1;
     }
-    if (m_squarePosition.y + m_squareSize.y / 2 >= m_backgroundSize.y / 2) {
-        m_dir.y = -1;
+    if (m_position.y - m_sizePt->y / 2.f <= 0.f) {
+        dir.y = 1;
     }
-    if (m_squarePosition.y - m_squareSize.y / 2 <= -m_backgroundSize.y / 2) {
-        m_dir.y = 1;
+    if (m_position.x - m_sizePt->x / 2.f <= windowSize.x / 3.f) {
+        dir.x = 1;
     }
-    m_squarePosition.x += speed.x * m_dir.x * dt;
-    m_squarePosition.y += speed.y * m_dir.y * dt;
-    m_square.setPosition(m_squarePosition);
-}   
+}
+
+void DemoSquare::Render(sf::RenderWindow& window) {
+    window.draw(m_rect);
+}
+
+// Background
+void DemoBackground::Init(const SettingsData& settingsData) {
+    sf::Vector2f windowSz = sf::Vector2f(settingsData.windowSize);
+    m_size = sf::Vector2f(windowSz.x / 3.f * 2.f, windowSz.y);
+    m_position = sf::Vector2f(windowSz.x / 3.f, 0.f);
+    m_colorPt = &settingsData.backgroundColor;
+    m_rect.setSize(m_size);
+    m_rect.setPosition(m_position);
+    m_rect.setFillColor(*m_colorPt);
+}
+
+void DemoBackground::Update() {
+    m_rect.setFillColor(*m_colorPt);
+}
+
+void DemoBackground::Render(sf::RenderWindow& window) {
+    window.draw(m_rect);
+}
+
+sf::Vector2f DemoBackground::GetSize() const {
+    return m_size;
+}
+ 

@@ -5,7 +5,7 @@
 #include "MidiFile.h"
 #include "Game/Map.hpp"
 #include "Game/Square.hpp"
-#include "Adds/Camera.hpp"
+#include "Game/Camera.hpp"
 #include "Data/SongData.hpp"
 
 

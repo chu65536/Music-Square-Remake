@@ -4,7 +4,7 @@
 #include <vector>
 #include <map>
 #include "Game/Platform.hpp"
-#include "Adds/Camera.hpp"
+#include "Game/Camera.hpp"
 #include "Data/SettingsData.hpp"
 #include "Data/SongData.hpp"
 

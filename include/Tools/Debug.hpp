@@ -24,5 +24,4 @@ void Stop(const std::string& message);
 
 void LogTime();
 void Log(const std::string& message);
-
 }

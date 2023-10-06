@@ -1,12 +1,12 @@
 #pragma once
 
 #include "States/State.hpp"
-#include "Adds/Conductor.hpp"
+#include "Game/Conductor.hpp"
 #include "Data/GameData.hpp"
 #include "Data/SettingsData.hpp"
 #include "Game/Map.hpp"
 #include "Game/Square.hpp"
-#include "Adds/Camera.hpp"
+#include "Game/Camera.hpp"
 
 
 class Play : public State {

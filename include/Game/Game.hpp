@@ -18,10 +18,11 @@ private:
     void render();
     void handleEvents();
     void setState(State::Type type);
-    void debugWindow(const sf::Time& dt) const;
+    void fpsCounter(const sf::Time& dt) const;
     void initImGui();
 
     sf::RenderWindow m_window;
+    sf::Color m_screenColor;
     sf::Clock m_clock;
     std::unique_ptr<State> m_currentState;
     State::Type m_currentStateType;

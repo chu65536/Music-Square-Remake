@@ -1,7 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include "Game/Platform.hpp"
-#include "Adds/Math.hpp"
+#include "Tools/Math.hpp"
 
 
 Platform::Platform(Data&& data): 

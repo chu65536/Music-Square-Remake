@@ -1,4 +1,4 @@
-#include "Adds/Conductor.hpp"
+#include "Game/Conductor.hpp"
 
 
 Conductor::Conductor(sf::Music& music) :

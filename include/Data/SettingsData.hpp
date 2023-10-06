@@ -8,24 +8,44 @@ class SettingsData {
 public:
     void Update();
 
-    unsigned windowSizeVector[2] {1920u, 1080u};
-    float squareSizeVector[2] {20.f, 20.f};
-    float platformSizeVector[2] {30.f, 10.f};
+    int squareSizeVector[2] {40, 40};
+    bool equalSides = true;
+
+    int squareSpeedVector[2] {500, 500};
+    bool equalSpeeds = true;
+
     float squareColorVector[3] {1.f, 0.f, 0.f};
-    float squareSpeedVector[2] {250.f, 250.f};
+    int squareOutlineThicknessVal = 4;
+    float squareOutlineColorVector[3] {0.f, 0.f, 0.f};
+
+
+    int platformSizeVector[2] {40, 20};
+
+    float platformColorVector[3] {0.f, 1.f, 0.f};
+    int platformOutlineThicknessVal = 4;
+    float platformOutlineColorVector[3] {0.f, 0.f, 0.f};
+
     float wallsColorVector[3] {0.f, 0.f,0.f};
     float backgroundColorVector[3] {1.f, 1.f, 1.f};
-    float chunkSizeVector[2] {250.f, 250.f};
-    bool debugWindow = false;
 
+    bool fpsCounter = false;
+
+    // system (inaccessible for user)
+    unsigned windowSizeVector[2] {1920u, 1080u};
+    float chunkSizeVector[2] {500.f, 500.f};
     sf::Vector2f squareSize;
     sf::Vector2f platformSize;
     sf::Vector2f squareSpeed;
     sf::Color squareColor;
     sf::Color backgroundColor;
     sf::Color wallsColor;
+    sf::Color squareOutlineColor;
+    sf::Color platformColor;
+    sf::Color platformOutlineColor;
     sf::Vector2f chunkSize;
     sf::Vector2u windowSize;
+    float squareOutlineThickness;
+    float platformOutlineThickness;
     std::vector<sf::Color> colors{
         sf::Color(0xff0000ff),
         sf::Color(0xffa500ff),

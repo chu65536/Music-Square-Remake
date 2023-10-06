@@ -5,18 +5,42 @@
 #include "Data/SettingsData.hpp"
 
 
+class DemoSquare {
+public:
+    void Init(const SettingsData& settingsData);
+    void Render(sf::RenderWindow& window);
+    void Update(const sf::Time& dt, const sf::Vector2f& windowSize);
+private:
+    sf::Vector2f m_position;
+    const sf::Vector2f* m_sizePt;
+    const sf::Vector2f* m_speedPt;
+    const sf::Color* m_colorPt;
+    const float* m_outlineThicknessPt;
+    const sf::Color* m_outlineColorPt; 
+    sf::Vector2f dir;
+    sf::RectangleShape m_rect;
+};
+
+class DemoBackground {
+public:
+    void Init(const SettingsData& settingsData);
+    void Update();
+    void Render(sf::RenderWindow& window); 
+    sf::Vector2f GetSize() const;
+private:
+    sf::Vector2f m_position;
+    sf::Vector2f m_size;
+    const sf::Color* m_colorPt;
+    sf::RectangleShape m_rect;
+};
+
 class BackgroundScene {
 public:
     void Init(const SettingsData& settingsData);
     void Update(const sf::Time& dt);
     void Render(sf::RenderWindow& window);
 private:
-    void updateSquare(const sf::Vector2f& speed, float dt);
-    sf::RectangleShape m_square;
-    sf::Vector2f m_squareSize;
-    sf::RectangleShape m_background;
-    sf::Vector2f m_backgroundSize;
+    DemoSquare m_square;
+    DemoBackground m_background;
     const SettingsData* m_settingsDataPt;
-    sf::Vector2f m_squarePosition;
-    sf::Vector2i m_dir;
 };

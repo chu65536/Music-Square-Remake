@@ -11,7 +11,7 @@ public:
     sf::Vector2f GetPosition() const;
     sf::Vector2f GetSize() const;
 
-    float zoom = 2.f;
+    float zoom = 1.f;
     float speed = 5.f;
 private:
     sf::RenderWindow& m_window;

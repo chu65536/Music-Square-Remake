@@ -2,10 +2,10 @@
 #include <chrono>
 #include <thread>
 #include <unordered_set>
-#include <Adds/Math.hpp>
+#include <Tools/Math.hpp>
 #include "Game/Map.hpp"
 #include "Data/GameData.hpp"
-#include "Adds/Debug.hpp"
+#include "Tools/Debug.hpp"
 
 
 void Map::Init(const SettingsData* settingsData, const SongData* songData) {

@@ -58,9 +58,9 @@ State::Type SongSelection::selectionMenu() {
 
     ImVec2 windowPosition, windowSize;
     windowSize.x = m_interfaceData.workSize.x / 3.f;
-    windowSize.y = m_interfaceData.workSize.y / 3.f;
+    windowSize.y = m_interfaceData.workSize.y / 2.f;
     windowPosition.x = windowSize.x;
-    windowPosition.y = windowSize.y;
+    windowPosition.y = m_interfaceData.workSize.y / 3.f;
     ImGui::SetNextWindowPos(windowPosition, ImGuiCond_Always, m_interfaceData.workPosPivot);
     ImGui::SetNextWindowSize(windowSize);
     ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
@@ -71,7 +71,7 @@ State::Type SongSelection::selectionMenu() {
     ImGui::PushStyleColor(ImGuiCol_Button, m_interfaceData.frontColor);
     ImGui::PushStyleColor(ImGuiCol_ButtonHovered, m_interfaceData.hoveredColor);
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, m_interfaceData.clickedColor);
-    ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[4]);
+    ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[5]);
     if (ImGui::Begin("Main Menu", NULL, windowFlags)) {
         for (size_t i = 0; i < m_loadedSongs.size(); ++i) {   
             std::string song = m_loadedSongs[i];
@@ -84,7 +84,7 @@ State::Type SongSelection::selectionMenu() {
     ImGui::End();
 
     ImVec2 buttonSize(windowSize.x, m_interfaceData.workSize.y / 10.f);
-    ImVec2 buttonPosition(windowPosition.x, windowSize.y * 2.f);
+    ImVec2 buttonPosition(windowPosition.x, windowPosition.y + windowSize.y);
     ImGui::SetNextWindowPos(buttonPosition);
     ImGui::SetNextWindowSize(buttonSize);
     ImGui::PushStyleColor(ImGuiCol_Button, m_interfaceData.frontColor);

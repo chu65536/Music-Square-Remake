@@ -44,10 +44,10 @@ State::Type Settings::settingsMenu() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
     ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.f, 0.f));
-    ImGui::PushStyleColor(ImGuiCol_FrameBg, m_interfaceData.frontColor);
-    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, m_interfaceData.hoveredColor);
-    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, m_interfaceData.clickedColor);
-    ImGui::PushStyleColor(ImGuiCol_TextSelectedBg, m_interfaceData.clickedColor);
+    ImGui::PushStyleColor(ImGuiCol_FrameBg, ImVec4(0.8f, 0.8f, 0.8f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgHovered, ImVec4(0.5f, 0.5f, 0.5f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_FrameBgActive, ImVec4(0.2f, 0.2f, 0.2f, 0.5f));
+    ImGui::PushStyleColor(ImGuiCol_TextSelectedBg, ImVec4(0.2f, 0.2f, 0.2f, 0.5f));
     ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[3]);
     if (ImGui::Begin("Settings menu", NULL, windowFlags)) {
         ImGui::PushItemWidth(-FLT_MIN);
@@ -130,6 +130,16 @@ State::Type Settings::settingsMenu() {
             // Walls color
             ITools::CenteredText("Color");
             ImGui::ColorEdit3("##Walls color", &m_settingsData.wallsColorVector[0]);
+        }
+        {
+            // Walls outline thickness
+            ITools::CenteredText("Outline Thickness");   
+            ImGui::SliderInt("##Walls outline thickness", &m_settingsData.wallsOutlineThicknessVal, 0, 20);
+        }
+        {
+            // Walls outline color
+            ITools::CenteredText("Outline Color");
+            ImGui::ColorEdit3("##Walls outline color", &m_settingsData.wallsOutlineColorVector[0]);
         }
         ImGui::PopItemWidth();
     }

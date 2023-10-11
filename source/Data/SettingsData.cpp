@@ -21,6 +21,7 @@ void SettingsData::Update() {
 
     squareOutlineThickness = -squareOutlineThicknessVal;
     platformOutlineThickness = -platformOutlineThicknessVal;
+    wallsOutlineThickness = wallsOutlineThicknessVal;
 
     windowSize = {windowSizeVector[0], windowSizeVector[1]};
     chunkSize = {chunkSizeVector[0], chunkSizeVector[1]};
@@ -30,6 +31,7 @@ void SettingsData::Update() {
     updateColor(squareOutlineColor, squareOutlineColorVector);
     updateColor(platformColor, platformColorVector);
     updateColor(platformOutlineColor, platformOutlineColorVector);
+    updateColor(wallsOutlineColor, wallsOutlineColorVector);
 }
 
 void SettingsData::updateColor(sf::Color& color, const float (&vec)[3]) {

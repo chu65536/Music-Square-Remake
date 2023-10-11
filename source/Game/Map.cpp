@@ -44,13 +44,12 @@ void Map::makeFirstPlatform() {
     speed.x *= (rand() % 2 ? -1: 1);
     speed.y *= (rand() % 2 ? -1: 1);
     std::vector<Platform::Direction> directions = getPossibleDirections(speed);
-    sf::Color color = m_dataPt->colors[m_SongDataPt->notes[0] % m_dataPt->colors.size()];
 
     Platform::Data platformData;
     platformData.position = position;
     platformData.time = m_SongDataPt->delays[0];
     platformData.directions = directions;
-    platformData.color = color;
+    platformData.color = m_dataPt->wallsColor;
     platformData.size = m_dataPt->platformSize;
     platformData.squareSize = m_dataPt->squareSize;
     platformData.speedBefore = speed;
@@ -87,11 +86,11 @@ Platform Map::makeNextPlatform(const sf::Vector2f& position, bool& remakeLastPla
 
     sf::Vector2f speed = m_platforms[m_platforms.size() - 1].GetSpeedAfter();
     std::vector<Platform::Direction> possibleDirections = getPossibleDirections(speed);
-    sf::Color color = m_dataPt->colors[m_SongDataPt->notes[m_platforms.size()] % m_dataPt->colors.size()];
+
     Platform::Data platformData;
     platformData.position = position;
     platformData.directions = possibleDirections;
-    platformData.color = color;
+    platformData.color = m_dataPt->wallsColor;
     platformData.speedBefore = speed;
     platformData.squareSize = m_dataPt->squareSize;
     platformData.size = m_dataPt->platformSize;
@@ -136,8 +135,8 @@ void Map::addBackground() {
     sf::RectangleShape back = makeRectangle(m_platforms[m_platforms.size() - 1], m_platforms[m_platforms.size() - 2]);
     back.setFillColor(m_dataPt->backgroundColor); 
     sf::RectangleShape cover = back;
-    back.setOutlineThickness(2.f);
-    back.setOutlineColor(sf::Color::Black);
+    back.setOutlineThickness(m_dataPt->wallsOutlineThickness);
+    back.setOutlineColor(m_dataPt->wallsOutlineColor);
 
     m_background.emplace_back(back);
     m_backgroundCover.emplace_back(cover);
@@ -161,11 +160,14 @@ void Map::Render(sf::RenderWindow& window, const Camera& cam) {
             }
         }
     }
-    for (auto back: m_backgroundCover) {
-        window.draw(back);
-    }
     for (auto obj: renderPool) {
         obj->Render(window);
+    }
+    for (auto back: m_background) {
+        window.draw(back);
+    }
+    for (auto cover: m_backgroundCover) {
+        window.draw(cover);
     }
 }
 

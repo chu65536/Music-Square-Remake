@@ -10,14 +10,10 @@ Platform::Platform(Data&& data):
     m_time(data.time),
     m_possibleDirections(data.directions),
     m_color(data.color),
-    m_speedBefore(data.speedBefore),
-    m_active(false)
+    m_speedBefore(data.speedBefore)
 {
-    m_rect.setPosition(m_position); 
-    float k = 0.f;
-    sf::Color col = data.color;
-    col.r *= k; col.g *= k; col.b *= k;   
-    m_rect.setFillColor(col);
+    m_rect.setPosition(m_position);  
+    m_rect.setFillColor(data.color);
 
     setDirection();
 }
@@ -97,13 +93,6 @@ void Platform::AddCandleBounds(candle::EdgeVector& pool) const{
         pool.emplace_back(m_bounds[i - 1], m_bounds[i]);
     }
     pool.emplace_back(m_bounds[m_bounds.size() - 1], m_bounds[0]);
-}
-
-void Platform::MakeActive() {
-    if (m_active) return;
-
-    m_active = true;
-    m_rect.setFillColor(m_color);
 }
 
 void Platform::rotate() {

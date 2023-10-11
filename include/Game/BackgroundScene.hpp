@@ -9,7 +9,7 @@ class DemoSquare {
 public:
     void Init(const SettingsData& settingsData);
     void Render(sf::RenderWindow& window);
-    void Update(const sf::Time& dt, const sf::Vector2f& windowSize);
+    void Update(const sf::Time& dt, const sf::Vector2f& windowSize, float wallsSize);
 private:
     sf::Vector2f m_position;
     const sf::Vector2f* m_sizePt;
@@ -23,7 +23,7 @@ private:
 
 class DemoBackground {
 public:
-    void Init(const SettingsData& settingsData);
+    void Init(const SettingsData& settingsData, float wallsSize);
     void Update();
     void Render(sf::RenderWindow& window); 
     sf::Vector2f GetSize() const;
@@ -32,6 +32,8 @@ private:
     sf::Vector2f m_size;
     const sf::Color* m_colorPt;
     sf::RectangleShape m_rect;
+    const sf::Color* m_outlineColorPt;
+    const float* m_outlineThickness;
 };
 
 class BackgroundScene {
@@ -42,5 +44,6 @@ public:
 private:
     DemoSquare m_square;
     DemoBackground m_background;
+    float m_wallsSize;
     const SettingsData* m_settingsDataPt;
 };

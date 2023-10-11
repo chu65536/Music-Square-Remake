@@ -12,8 +12,8 @@
 
 Game::Game() {
     m_settingsData.Update();
-    m_window.create(sf::VideoMode(m_settingsData.windowSize.x, m_settingsData.windowSize.y), "Music Square Remake", sf::Style::Fullscreen);
-    // m_window.create(sf::VideoMode(m_settingsData.windowSize.x, m_settingsData.windowSize.y), "Music Square Remake");
+    // m_window.create(sf::VideoMode(m_settingsData.windowSize.x, m_settingsData.windowSize.y), "Music Square Remake", sf::Style::Fullscreen);
+    m_window.create(sf::VideoMode(m_settingsData.windowSize.x, m_settingsData.windowSize.y), "Music Square Remake");
     m_gameData.windowPt = &m_window;
     m_currentState = std::make_unique<Menu>(m_interfaceData);
     State::Type m_currentStateType = State::Type::Menu;

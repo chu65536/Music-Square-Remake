@@ -32,9 +32,9 @@ State::Type Menu::mainMenu() {
 
     ImVec2 windowPosition, windowSize;
     windowSize.x = m_interfaceData.workSize.x / 3.f;
-    windowSize.y = m_interfaceData.workSize.y / 2.f;
+    windowSize.y = m_interfaceData.workSize.y / 8.f * 6.f;
     windowPosition.x = m_interfaceData.workPos.x;
-    windowPosition.y = windowSize.y;
+    windowPosition.y = m_interfaceData.workSize.y / 8.f;
     ImGui::SetNextWindowPos(windowPosition, ImGuiCond_Always, m_interfaceData.workPosPivot);
     ImGui::SetNextWindowSize(windowSize);
     ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;

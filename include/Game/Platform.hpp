@@ -46,5 +46,4 @@ private:
     sf::Vector2f m_speedAfter;
     std::vector<Direction> m_possibleDirections;
     std::vector<sf::Vector2f> m_bounds;
-    bool m_active = false;;
 };

@@ -15,7 +15,6 @@ void Square::Init(const SettingsData& settingsData) {
 }
 
 void Square::Update(float time, Platform& platform) {
-    platform.MakeActive();
     m_position = platform.GetPosition();
     float deltaTime = time - platform.GetTime();
     Platform::Direction dir = platform.GetDirection();

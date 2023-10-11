@@ -11,11 +11,11 @@ void Parser::Parse(SongData& data) {
     data.midi.linkNotePairs();
     data.midi.joinTracks();
 
-    std::unordered_map<uint, int> mp;
+    std::unordered_map<unsigned, int> mp;
     int num = 1;
     for (size_t event = 0; event < data.midi[0].size(); ++event) {
         if (data.midi[0][event].isNoteOn()) {
-            uint note = data.midi[0][event].getKeyNumber();
+            unsigned note = data.midi[0][event].getKeyNumber();
             if (!mp[note]) {
                 mp[note] = num;
                 num++;

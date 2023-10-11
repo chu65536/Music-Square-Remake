@@ -3,6 +3,7 @@
 #include <SFML/Graphics.hpp>
 #include <vector>
 #include <map>
+#include <unordered_map>
 #include "Game/Platform.hpp"
 #include "Game/Camera.hpp"
 #include "Data/SettingsData.hpp"

@@ -49,7 +49,9 @@ void Map::makeFirstPlatform() {
     platformData.position = position;
     platformData.time = m_SongDataPt->delays[0];
     platformData.directions = directions;
-    platformData.color = m_dataPt->wallsColor;
+    platformData.color = m_dataPt->platformColor;
+    platformData.outlineColor = m_dataPt->platformOutlineColor;
+    platformData.outlineThickness = m_dataPt->platformOutlineThickness;
     platformData.size = m_dataPt->platformSize;
     platformData.squareSize = m_dataPt->squareSize;
     platformData.speedBefore = speed;
@@ -90,7 +92,9 @@ Platform Map::makeNextPlatform(const sf::Vector2f& position, bool& remakeLastPla
     Platform::Data platformData;
     platformData.position = position;
     platformData.directions = possibleDirections;
-    platformData.color = m_dataPt->wallsColor;
+    platformData.color = m_dataPt->platformColor;
+    platformData.outlineColor = m_dataPt->platformOutlineColor;
+    platformData.outlineThickness = m_dataPt->platformOutlineThickness;
     platformData.speedBefore = speed;
     platformData.squareSize = m_dataPt->squareSize;
     platformData.size = m_dataPt->platformSize;
@@ -142,31 +146,23 @@ void Map::addBackground() {
     m_backgroundCover.emplace_back(cover);
 }
 
-void Map::Render(sf::RenderWindow& window, const Camera& cam) {
-    sf::Vector2f size = cam.GetSize();
-    sf::Vector2f pos = cam.GetPosition();
-
-    int x1 = (pos.x - size.x / 2) / m_dataPt->chunkSize.x;
-    int x2 = (pos.x + size.x / 2) / m_dataPt->chunkSize.x;
-    int y1 = (pos.y - size.y / 2) / m_dataPt->chunkSize.y;
-    int y2 = (pos.y + size.y / 2) / m_dataPt->chunkSize.y;
-
-    std::unordered_set<Platform*> renderPool;
-    for (int x = x1; x <= x2; ++x) {
-        for (int y = y1; y <= y2; ++y) {
-            for (auto object: m_gridMap[{x, y}]) {
-                auto val = *object;
-                renderPool.insert(object);
-            }
+void Map::Render(sf::RenderWindow& window, const Camera& cam) 
+{   
+    if (m_dataPt->visiblePlatforms)
+    {
+        for (auto& platform: m_platforms)
+        {   
+            platform.Render(window);
         }
     }
-    for (auto obj: renderPool) {
-        obj->Render(window);
-    }
-    for (auto back: m_background) {
+
+    for (auto back: m_background) 
+    {
         window.draw(back);
     }
-    for (auto cover: m_backgroundCover) {
+
+    for (auto cover: m_backgroundCover) 
+    {
         window.draw(cover);
     }
 }

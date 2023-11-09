@@ -21,14 +21,12 @@ endif (WIN32)
 FetchContent_Declare(
   SFML
   URL "https://github.com/SFML/SFML/archive/${SFML_VERSION}.zip"
-  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libraries/SFML
 )
 
 # ImGui
 FetchContent_Declare(
   imgui
   URL "https://github.com/ocornut/imgui/archive/v${IMGUI_VERSION}.zip"
-  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libraries/ImGui
 )
 
 # ImGui-SFML
@@ -36,21 +34,18 @@ FetchContent_Declare(
   imgui-sfml
   GIT_REPOSITORY https://github.com/SFML/imgui-sfml.git
   GIT_TAG        2.6.x
-  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libraries/ImGui-SFML
 )
 
 # Midifile
 FetchContent_Declare(
   midifile
   GIT_REPOSITORY https://github.com/craigsapp/midifile.git
-  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libraries/Midifile
 )
 
 # Candle
 FetchContent_Declare(
   candle
   GIT_REPOSITORY https://github.com/MiguelMJ/Candle.git
-  SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libraries/Candle
 )
 
 # Building
@@ -99,8 +94,8 @@ target_include_directories(
   sfml-app
   PRIVATE
   include
-  libraries/Midifile/include
-  libraries/Candle/include
+  ${midifile_SOURCE_DIR}/include
+  ${candle_SOURCE_DIR}/include
 )
 target_link_libraries(
   sfml-app

@@ -5,7 +5,8 @@
 #include "Data/SettingsData.hpp"
 
 
-class DemoSquare {
+class DemoSquare 
+{
 public:
     void Init(const SettingsData& settingsData);
     void Render(sf::RenderWindow& window);
@@ -21,7 +22,8 @@ private:
     sf::RectangleShape m_rect;
 };
 
-class DemoBackground {
+class DemoBackground 
+{
 public:
     void Init(const SettingsData& settingsData, float wallsSize);
     void Update();
@@ -33,10 +35,26 @@ private:
     const sf::Color* m_colorPt;
     sf::RectangleShape m_rect;
     const sf::Color* m_outlineColorPt;
-    const float* m_outlineThickness;
+    const float* m_outlineThicknessPt;
 };
 
-class BackgroundScene {
+class DemoPlatform
+{
+public:
+    void Init(const SettingsData& settingsData);
+    void Update();
+    void Render(sf::RenderWindow& window);
+private:
+    sf::Vector2f m_position;
+    const sf::Vector2f* m_sizePt;
+    const sf::Color* m_colorPt;
+    const sf::Color* m_outlineColorPt;
+    const float* m_outlineThicknessPt;
+    sf::RectangleShape m_rect;
+};
+
+class BackgroundScene 
+{
 public:
     void Init(const SettingsData& settingsData);
     void Update(const sf::Time& dt);
@@ -44,6 +62,7 @@ public:
 private:
     DemoSquare m_square;
     DemoBackground m_background;
+    DemoPlatform m_platform;
     float m_wallsSize;
     const SettingsData* m_settingsDataPt;
 };

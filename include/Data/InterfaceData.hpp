@@ -6,7 +6,7 @@
 
 class InterfaceData {
 public:
-    void Update();
+    void Update();    
     ImVec2 menuBtnSz {300.f ,100.f};
     ImVec2 selectionBtnSz {500.f, 75.f};
     ImVec2 workPos;

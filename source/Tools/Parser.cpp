@@ -31,5 +31,10 @@ void Parser::Parse(SongData& data) {
             }
         }
     }
+
+    double first = data.delays[0];
+    for (auto& delay: data.delays) {
+        delay -= first;
+    }
     DEBUG_TIMER_STOP("Midi parsed");
 }

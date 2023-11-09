@@ -15,7 +15,6 @@ public:
     void SetSpeed(const sf::Vector2f& speed);
     const std::vector<sf::Vector2f>& GetBounds() const;
     const sf::Vector2f& GetPositionRef() const;
-    void CastLight(candle::EdgeVector& bounds);
 private:
     sf::Vector2f m_position;
     sf::Vector2f m_speed_;

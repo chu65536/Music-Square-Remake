@@ -32,9 +32,10 @@ public:
     float backgroundColorVector[3] {1.f, 1.f, 1.f};
 
     bool fpsCounter = false;
+    bool visiblePlatforms = true;
 
     // system (inaccessible for user)
-    unsigned windowSizeVector[2] {800u, 800u};
+    unsigned windowSizeVector[2] {1920u, 1080u};
     float chunkSizeVector[2] {500.f, 500.f};
     sf::Vector2f squareSize;
     sf::Vector2f platformSize;

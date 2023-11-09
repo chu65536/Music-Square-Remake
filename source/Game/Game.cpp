@@ -8,12 +8,15 @@
 #include "States/About.hpp"
 #include "imgui.h"
 #include "imgui-SFML.h"
+#include "Tools/InterfaceTool.hpp"
 
 
 Game::Game() {
     m_settingsData.Update();
-    // m_window.create(sf::VideoMode(m_settingsData.windowSize.x, m_settingsData.windowSize.y), "Music Square Remake", sf::Style::Fullscreen);
-    m_window.create(sf::VideoMode(m_settingsData.windowSize.x, m_settingsData.windowSize.y), "Music Square Remake");
+    sf::ContextSettings windowSettings;
+    windowSettings.antialiasingLevel = 8u;
+    m_window.create(sf::VideoMode(m_settingsData.windowSize.x, m_settingsData.windowSize.y), "Music Square Remake", sf::Style::Fullscreen, windowSettings);
+    m_window.setVerticalSyncEnabled(true);
     m_gameData.windowPt = &m_window;
     m_currentState = std::make_unique<Menu>(m_interfaceData);
     State::Type m_currentStateType = State::Type::Menu;
@@ -69,7 +72,7 @@ void Game::update() {
 
 void Game::render() {
     m_window.clear(m_settingsData.wallsColor);
-    if (m_currentStateType != State::Type::Play && m_currentStateType != State::Type::Load && m_currentStateType != State::Type::SongSelection) {
+    if (m_currentStateType != State::Type::Play && m_currentStateType != State::Type::Load) {
         m_backgroundScene.Render(m_window);
     }
     m_currentState->Render(m_window);
@@ -117,25 +120,20 @@ void Game::initImGui() {
     }
     ImGuiIO &IO = ImGui::GetIO();
     IO.IniFilename = NULL;
-    IO.Fonts->AddFontFromFileTTF("../resources/fonts/square-deal.ttf", 10.f);
-    IO.Fonts->AddFontFromFileTTF("../resources/fonts/square-deal.ttf", 20.f);
-    IO.Fonts->AddFontFromFileTTF("../resources/fonts/square-deal.ttf", 30.f);
-    IO.Fonts->AddFontFromFileTTF("../resources/fonts/square-deal.ttf", 40.f);
-    IO.Fonts->AddFontFromFileTTF("../resources/fonts/square-deal.ttf", 50.f);
-    IO.Fonts->AddFontFromFileTTF("../resources/fonts/square-deal.ttf", 60.f);
+    for (size_t i = 1; i <= 10; ++i)
+    {
+        IO.Fonts->AddFontFromFileTTF("../resources/fonts/square-deal.ttf", i * 10);
+    }
     if (!ImGui::SFML::UpdateFontTexture()) {
         std::cerr << "ImGui-SFML font load failed" << std::endl;
     }
 }
 
-void Game::fpsCounter(const sf::Time& dt) const {
-    ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav | ImGuiWindowFlags_NoMove;
-    ImGui::SetNextWindowPos(m_interfaceData.workPos, ImGuiCond_Always);
+void Game::fpsCounter(const sf::Time& dt) const 
+{   
     std::string fps = std::to_string(1.f / dt.asSeconds());
-    if (ImGui::Begin("Example: Simple overlay", NULL, window_flags))
-    {
-        ImGui::Text(fps.c_str());
-    }
-    ImGui::End();
+    ITools::DefaultWindowBegin({0.f, 0.f}, {100.f, -FLT_MIN}, 3, "fps");
+    ImGui::Text(fps.c_str());
+    ITools::DefaultWindowEnd();
 }
 

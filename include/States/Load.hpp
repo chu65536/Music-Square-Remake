@@ -10,7 +10,7 @@
 
 class Load : public State {
 public:
-    Load(GameData& gameDatam, const SettingsData& settingsData, const InterfaceData& interfaceData);
+    Load(GameData& gameData, const SettingsData& settingsData, const InterfaceData& interfaceData);
     State::Type Update(const sf::Time& dt) override;
     void HandleEvents(sf::RenderWindow& window, sf::Event& event) override;
     void Render(sf::RenderWindow& window) override;

@@ -5,15 +5,19 @@
 #include <vector>
 
 
-class Platform {
+class Platform 
+{
 public:
     enum class Direction { Down, Left, Up, Right };
-    struct Data {
+    struct Data 
+    {
         sf::Vector2f position;
         double time;
         sf::Vector2f size;
         std::vector<Platform::Direction> directions;
         sf::Color color;
+        sf::Color outlineColor;
+        float outlineThickness;
         sf::Vector2f speedBefore;
         sf::Vector2f squareSize;
     };
@@ -40,6 +44,8 @@ private:
     const double m_time;
     sf::Vector2f m_size;
     sf::Color m_color;
+    sf::Color m_outlineColor;
+    float m_outlineThickness;
     Platform::Direction m_direction;
     sf::RectangleShape m_rect;
     const sf::Vector2f m_speedBefore;

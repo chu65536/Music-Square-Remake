@@ -10,10 +10,14 @@ Platform::Platform(Data&& data):
     m_time(data.time),
     m_possibleDirections(data.directions),
     m_color(data.color),
+    m_outlineColor(data.outlineColor),
+    m_outlineThickness(data.outlineThickness),
     m_speedBefore(data.speedBefore)
 {
     m_rect.setPosition(m_position);  
     m_rect.setFillColor(data.color);
+    m_rect.setOutlineColor(m_outlineColor);
+    m_rect.setOutlineThickness(m_outlineThickness);
 
     setDirection();
 }
@@ -56,11 +60,13 @@ bool Platform::TryAnotherDirection() {
     return true;
 }
 
-void Platform::Render(sf::RenderWindow& window) {
+void Platform::Render(sf::RenderWindow& window) 
+{
     window.draw(m_rect);
 }
 
-sf::Vector2f Platform::GetPosition() const {
+sf::Vector2f Platform::GetPosition() const 
+{
     return m_position;
 }
 

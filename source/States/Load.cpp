@@ -6,6 +6,7 @@
 #include "States/Load.hpp"
 #include "Tools/Parser.hpp"
 #include "Tools/Debug.hpp"
+#include "Tools/InterfaceTool.hpp"
 
 
 Load::Load(GameData& gameData, const SettingsData& settingsData, const InterfaceData& interfaceData) :
@@ -102,15 +103,12 @@ void Load::updateText() {
     }
 }
 
-void Load::loading() { 
-    ImVec2 m_windowpos, m_windowpos_pivot;
-    m_windowpos.x = m_interfaceData.workPos.x + m_interfaceData.workSize.x / 2 - 100.f;
-    m_windowpos.y = m_interfaceData.workPos.y + m_interfaceData.workSize.y / 2;
-    ImGui::SetNextWindowPos(m_windowpos, ImGuiCond_Always, m_windowpos_pivot);
-    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize;
-    ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[6]);
-    ImGui::Begin("Main Menu", NULL, windowFlags);
+void Load::loading() 
+{ 
+    float x = m_interfaceData.workPos.x + m_interfaceData.workSize.x * 0.5f - 50.f;
+    float y = m_interfaceData.workPos.y + m_interfaceData.workSize.y * 0.5f;
+
+    ITools::DefaultWindowBegin({x, y}, {-FLT_MIN, -FLT_MIN}, 6, "Loading");
     ImGui::Text(m_loadingText.c_str());
-    ImGui::End();
-    ImGui::PopFont();
+    ITools::DefaultWindowEnd();
 }

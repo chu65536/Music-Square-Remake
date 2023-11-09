@@ -3,6 +3,7 @@
 #include "States/SongSelection.hpp"
 #include "imgui.h"
 #include "imgui-SFML.h"
+#include "Tools/InterfaceTool.hpp"
 
 
 SongSelection::SongSelection(GameData& data, const InterfaceData& interfaceData) :
@@ -56,50 +57,28 @@ void SongSelection::loadSongs() {
 State::Type SongSelection::selectionMenu() {
     State::Type returnValue = State::Type::None;
 
-    ImVec2 windowPosition, windowSize;
-    windowSize.x = m_interfaceData.workSize.x / 3.f;
-    windowSize.y = m_interfaceData.workSize.y / 2.f;
-    windowPosition.x = windowSize.x;
-    windowPosition.y = m_interfaceData.workSize.y / 3.f;
-    ImGui::SetNextWindowPos(windowPosition, ImGuiCond_Always, m_interfaceData.workPosPivot);
-    ImGui::SetNextWindowSize(windowSize);
-    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
+    float w = m_interfaceData.workSize.x / 3.f;
+    float h = m_interfaceData.workSize.y / 8.f * 5.5f;
+    float x = m_interfaceData.workPos.x;
+    float y = m_interfaceData.workSize.y / 8.f;
+    float btnY = h / 12.f;
 
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.f, 0.f));
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.f);
-    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0.f, 0.f));
-    ImGui::PushStyleColor(ImGuiCol_Button, m_interfaceData.frontColor);
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, m_interfaceData.hoveredColor);
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, m_interfaceData.clickedColor);
-    ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[5]);
-    if (ImGui::Begin("Main Menu", NULL, windowFlags)) {
-        for (size_t i = 0; i < m_loadedSongs.size(); ++i) {   
-            std::string song = m_loadedSongs[i];
-            if (ImGui::Button(song.c_str(), ImVec2(-FLT_MIN, windowSize.y / 8.f))) {
-                m_gameData.songData.chosenSongName = song;
-                returnValue =  State::Type::Load;
-            }
+    ITools::DefaultWindowBegin({x, y}, {w, h}, 4, "Selection");
+    for (size_t i = 0; i < m_loadedSongs.size(); ++i) {   
+        std::string song = m_loadedSongs[i];
+        if (ImGui::Button(song.c_str(), {-FLT_MIN, btnY})) {
+            m_gameData.songData.chosenSongName = song;
+            returnValue =  State::Type::Load;
         }
     }
-    ImGui::End();
+    ITools::DefaultWindowEnd();
 
-    ImVec2 buttonSize(windowSize.x, m_interfaceData.workSize.y / 10.f);
-    ImVec2 buttonPosition(windowPosition.x, windowPosition.y + windowSize.y);
-    ImGui::SetNextWindowPos(buttonPosition);
-    ImGui::SetNextWindowSize(buttonSize);
-    ImGui::PushStyleColor(ImGuiCol_Button, m_interfaceData.frontColor);
-    ImGui::PushStyleColor(ImGuiCol_ButtonHovered, m_interfaceData.hoveredColor);
-    ImGui::PushStyleColor(ImGuiCol_ButtonActive, m_interfaceData.clickedColor);
-    ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[6]);
-    if (ImGui::Begin("Back button", NULL, windowFlags)) {
-        if (ImGui::Button("Back", ImVec2(-FLT_MIN, -FLT_MIN))) {
-            returnValue = State::Type::Menu;
-        }
+    ITools::DefaultWindowBegin({x, y + h}, {w, m_interfaceData.workSize.y / 8.f * 0.5f}, 5, "Back");
+    if (ImGui::Button("Back", {-FLT_MIN, -FLT_MIN}))
+    {
+        returnValue = State::Type::Menu;
     }
-    ImGui::PopFont();
-    ImGui::End();
-    ImGui::PopFont();
-    ImGui::PopStyleColor(6);
-    ImGui::PopStyleVar(3);
+    ITools::DefaultWindowEnd();
+
     return returnValue;
 }

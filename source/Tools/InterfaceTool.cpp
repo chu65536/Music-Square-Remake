@@ -1,10 +1,11 @@
 #include "Tools/InterfaceTool.hpp"
 #include <iostream>
+#include "Tools/Debug.hpp"
 
 namespace ITools 
 {
 void DefaultWindowBegin(ImVec2 pos, ImVec2 sz, unsigned int fontSz, const std::string& title)
-{
+{   
     // Default values
     ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
 
@@ -35,8 +36,15 @@ void DefaultWindowBegin(ImVec2 pos, ImVec2 sz, unsigned int fontSz, const std::s
     ImGui::PushStyleColor(ImGuiCol_WindowBg, backgroundColor);
 
     // Font
-    assert(fontSz < ImGui::GetIO().Fonts->Fonts.size() && "Font id is out of range");
-    ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[fontSz]);
+    if (fontSz < ImGui::GetIO().Fonts->Fonts.size())
+    {
+        ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[fontSz]);
+    }
+    else
+    {
+        std::cerr << "Font is not found" << std::endl;
+        ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
+    }
 
     // Begin
     ImGui::Begin(title.c_str(), NULL, windowFlags);

@@ -15,7 +15,7 @@ Platform::Platform(Data&& data):
     m_speedBefore(data.speedBefore)
 {
     m_rect.setPosition(m_position);  
-    m_rect.setFillColor(data.color);
+    m_rect.setFillColor(m_color);
     m_rect.setOutlineColor(m_outlineColor);
     m_rect.setOutlineThickness(m_outlineThickness);
 
@@ -23,7 +23,8 @@ Platform::Platform(Data&& data):
 }
 
 void Platform::setDirection() {
-    if (m_possibleDirections.size() == 0) {
+    if (m_possibleDirections.size() == 0) 
+    {
         return;
     }
 

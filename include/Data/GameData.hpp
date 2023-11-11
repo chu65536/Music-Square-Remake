@@ -2,19 +2,23 @@
 
 #include <SFML/Audio.hpp>
 #include <vector>
-#include "MidiFile.h"
-#include "Game/Map.hpp"
 #include "Game/Square.hpp"
+#include "Game/Map.hpp"
 #include "Game/Camera.hpp"
+#include "MidiFile.h"
 #include "Data/SongData.hpp"
 
-
-class GameData {
-public:
+struct GameData 
+{
+    struct Screen
+    {
+        Square square;
+        Map map;
+        Camera camera;
+    };
     void Clear();
 
     sf::RenderWindow* windowPt;
     SongData songData;
-    Square square;
-    Map map;
+    std::vector<Screen> screens;
 };

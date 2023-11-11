@@ -11,7 +11,8 @@
 #include "Tools/InterfaceTool.hpp"
 
 
-Game::Game() {
+Game::Game() 
+{
     m_settingsData.Update();
     sf::ContextSettings windowSettings;
     windowSettings.antialiasingLevel = 8u;
@@ -24,9 +25,11 @@ Game::Game() {
     m_backgroundScene.Init(m_settingsData);
 }
     
-void Game::Run() {
+void Game::Run() 
+{
     initImGui();
-    while (m_window.isOpen()) {
+    while (m_window.isOpen()) 
+    {
         handleEvents();
         update();
         render();
@@ -34,16 +37,21 @@ void Game::Run() {
     ImGui::SFML::Shutdown();
 }
 
-void Game::handleEvents() {
+void Game::handleEvents() 
+{
     sf::Event event;
-    while(m_window.pollEvent(event)) {
+    while(m_window.pollEvent(event)) 
+    {
         ImGui::SFML::ProcessEvent(m_window, event);
-        if (event.type == sf::Event::Closed) {
+        if (event.type == sf::Event::Closed) 
+        {
             m_window.close();
         }
-        if (event.type == sf::Event::KeyPressed) {
+        if (event.type == sf::Event::KeyPressed) 
+        {
             sf::Keyboard::Key key = event.key.code;
-            switch(key) {
+            switch(key) 
+            {
             case sf::Keyboard::F:
                 m_settingsData.fpsCounter = !m_settingsData.fpsCounter;
                 break; 
@@ -53,26 +61,32 @@ void Game::handleEvents() {
     }
 }
  
-void Game::update() {
+void Game::update() 
+{
     sf::Time deltaTime = m_clock.restart();
     ImGui::SFML::Update(m_window, deltaTime);
     m_interfaceData.Update();
-    if (m_settingsData.fpsCounter) {
+    if (m_settingsData.fpsCounter) 
+    {
         fpsCounter(deltaTime);
     }
-    if (m_currentStateType != State::Type::Play) {
+    if (m_currentStateType != State::Type::Play) 
+    {
         m_backgroundScene.Update(deltaTime);
     }
     State::Type nextStateType = m_currentState->Update(deltaTime);
-    setState(nextStateType);
-    if (nextStateType == State::Type::Play) {
-        m_screenColor = m_settingsData.wallsColor;
+    if (nextStateType != State::Type::None)
+    {
+        setState(nextStateType);
     }
 }
 
-void Game::render() {
+void Game::render() 
+{
     m_window.clear(m_settingsData.wallsColor);
-    if (m_currentStateType != State::Type::Play && m_currentStateType != State::Type::Load) {
+    // Reinterpret cast probably??? No additional variable then
+    if (m_currentStateType != State::Type::Play && m_currentStateType != State::Type::Load) 
+    {
         m_backgroundScene.Render(m_window);
     }
     m_currentState->Render(m_window);
@@ -80,10 +94,11 @@ void Game::render() {
     m_window.display();
 }
 
-void Game::setState(State::Type type) {  
-    if (type == State::Type::None) return;
+void Game::setState(State::Type type) 
+{  
     srand(time(0));
-    switch (type) {
+    switch (type) 
+    {
     case State::Type::Exit:
         m_window.close();
         break;
@@ -115,16 +130,18 @@ void Game::setState(State::Type type) {
 }
 
 void Game::initImGui() {
-    if (!ImGui::SFML::Init(m_window)) {
+    if (!ImGui::SFML::Init(m_window)) 
+    {
         std::cerr << "ImGui-SFML init failed" << std::endl;
     }
     ImGuiIO &IO = ImGui::GetIO();
     IO.IniFilename = NULL;
     for (size_t i = 1; i <= 10; ++i)
     {
-        IO.Fonts->AddFontFromFileTTF("../resources/fonts/square-deal.ttf", i * 10);
+        IO.Fonts->AddFontFromFileTTF("../../resources/fonts/square-deal.ttf", i * 10);
     }
-    if (!ImGui::SFML::UpdateFontTexture()) {
+    if (!ImGui::SFML::UpdateFontTexture()) 
+    {
         std::cerr << "ImGui-SFML font load failed" << std::endl;
     }
 }

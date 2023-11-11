@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Data/SongData.hpp"
+#include "Data/GameData.hpp"
 
 
 namespace Parser {

@@ -2,6 +2,7 @@
 
 #include <thread>
 #include <mutex>
+#include <queue>
 #include "States/State.hpp"
 #include "Data/GameData.hpp"
 #include "Data/SettingsData.hpp"
@@ -21,6 +22,8 @@ private:
     void readAudio();
     void loading();
     void updateText();
+    GameData::Screen makeScreen(const sf::FloatRect& viewport, const SongData::Track& track, const sf::Vector2f& startPoint);
+    void makeViewports(unsigned int n, std::deque<sf::FloatRect>& q);
     
     GameData& m_gameData;
     const SettingsData& m_settingsData;

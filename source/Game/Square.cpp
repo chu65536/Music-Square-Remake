@@ -3,10 +3,11 @@
 #include "Tools/Math.hpp"
 
 
-void Square::Init(const SettingsData& settingsData) {
+void Square::Init(const SettingsData& settingsData, const sf::Vector2f& startPoint) {
     m_speed_ = settingsData.squareSpeed;
+    m_position = startPoint;
     m_rect = sf::RectangleShape(settingsData.squareSize);
-    m_rect.setOrigin(settingsData.squareSize.x / 2, settingsData.squareSize.y / 2);
+    m_rect.setOrigin(settingsData.squareSize / 2.f);
     m_rect.setPosition(m_position);
     m_rect.setFillColor(settingsData.squareColor);
     m_rect.setOutlineThickness(settingsData.squareOutlineThickness);
@@ -45,7 +46,7 @@ void Square::SetSpeed(const sf::Vector2f& speed) {
     m_speed_ = speed;
 }
 
-const sf::Vector2f& Square::GetPositionRef() const {
-    return m_position;
+const sf::Vector2f* Square::GetPositionRef() const {
+    return &m_position;
 }
 

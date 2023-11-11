@@ -8,24 +8,29 @@
 #include "Tools/Debug.hpp"
 
 
-void Map::Init(const SettingsData* settingsData, const SongData* songData) {
+void Map::Init(const SettingsData* settingsData, const SongData::Track* songData, const sf::Vector2f& startPoint)
+{
     m_dataPt = settingsData;
     m_SongDataPt = songData;
+    m_startPoint = startPoint;
     makePlatforms();
 }
 
-void Map::makePlatforms() {
-    DEBUG_TIMER_START();
+void Map::makePlatforms() 
+{
     makeFirstPlatform();
     std::unordered_map<unsigned, unsigned> attempts;
     bool remakeLastPlatform = false;
-    while (m_platforms.size() != m_SongDataPt->delays.size()) {
-        DEBUG_LOG(std::to_string(float(m_platforms.size()) / m_SongDataPt->delays.size() * 100));
+    while (m_platforms.size() != m_SongDataPt->delays.size()) 
+    {
+        // DEBUG_LOG(std::to_string(float(m_platforms.size()) / m_SongDataPt->delays.size() * 100));
         handleAttempts(attempts);
         sf::Vector2f nextPosition = getNextPosition();
         Platform nextPlatform = makeNextPlatform(nextPosition, remakeLastPlatform);
-        if (checkCollisions(nextPlatform)) {
-            if (!goBack()) {
+        if (checkCollisions(nextPlatform)) 
+        {
+            if (!goBack()) 
+            {
                 Debug::Timer::Stop("Map generation failed");
                 return; 
             }
@@ -35,18 +40,16 @@ void Map::makePlatforms() {
         addNextPlatform(nextPlatform);
     } 
     makeGridMap();
-    DEBUG_TIMER_STOP("Map generated");
 }
 
 void Map::makeFirstPlatform() {
-    sf::Vector2f position (0.f, 0.f);
     sf::Vector2f speed = m_dataPt->squareSpeed;
     speed.x *= (rand() % 2 ? -1: 1);
     speed.y *= (rand() % 2 ? -1: 1);
     std::vector<Platform::Direction> directions = getPossibleDirections(speed);
 
     Platform::Data platformData;
-    platformData.position = position;
+    platformData.position = m_startPoint;
     platformData.time = m_SongDataPt->delays[0];
     platformData.directions = directions;
     platformData.color = m_dataPt->platformColor;
@@ -146,7 +149,7 @@ void Map::addBackground() {
     m_backgroundCover.emplace_back(cover);
 }
 
-void Map::Render(sf::RenderWindow& window, const Camera& cam) 
+void Map::Render(sf::RenderWindow& window) 
 {   
     if (m_dataPt->visiblePlatforms)
     {

@@ -10,12 +10,11 @@
 #include "Data/SongData.hpp"
 
 
-struct GameData;
-
-class Map {
+class Map 
+{
 public:
-    void Init(const SettingsData* settingsData, const SongData* songData);
-    void Render(sf::RenderWindow& window, const Camera& cam);
+    void Init(const SettingsData* settingsData, const SongData::Track* trackData, const sf::Vector2f& startPoint);
+    void Render(sf::RenderWindow& window);
     void Clear();
     const std::vector<Platform>& GetPlatforms() const;
     Platform& GetNextPlatform(float time);
@@ -23,6 +22,7 @@ public:
     bool isEnd() const;
     size_t GetSize() const;
     bool IsFailed() const;
+
 private:
     void makePlatforms();
     void makeFirstPlatform();
@@ -39,7 +39,8 @@ private:
     sf::RectangleShape makeRectangle(const Platform& platform1, const Platform& platform2);
 
     const SettingsData* m_dataPt;
-    const SongData* m_SongDataPt;
+    const SongData::Track* m_SongDataPt;
+    sf::Vector2f m_startPoint;
     size_t m_curPlatform = 0;
     std::vector<Platform> m_platforms;
     std::vector<sf::RectangleShape> m_background;

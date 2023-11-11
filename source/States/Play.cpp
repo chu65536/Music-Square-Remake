@@ -1,12 +1,13 @@
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "States/Play.hpp"
+#include "Tools/Debug.hpp"
 
 
 Play::Play(GameData& gameData, const SettingsData& settingsData) :
     m_gameData(gameData),
-    m_conductor(gameData.songData.music),
-    m_camera(*gameData.windowPt, gameData.square, sf::Vector2f(0.f, 0.f), settingsData.windowSize) {
+    m_conductor(gameData.songData.music)
+{
 }
 
 void Play::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
@@ -30,12 +31,12 @@ void Play::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
         }
     }
 
-    if (event.type == sf::Event::MouseWheelScrolled) {
-        float delta = event.mouseWheelScroll.delta * 0.1f;
-        if (0.2f < m_camera.zoom + delta && m_camera.zoom + delta < 5.f) {
-            m_camera.zoom += delta;
-        }
-    }
+    // if (event.type == sf::Event::MouseWheelScrolled) {
+    //     float delta = event.mouseWheelScroll.delta * 0.1f;
+    //     if (0.2f < m_camera.zoom + delta && m_camera.zoom + delta < 5.f) {
+    //         m_camera.zoom += delta;
+    //     }
+    // }
 }
 
 State::Type Play::Update(const sf::Time& dt) {
@@ -44,22 +45,29 @@ State::Type Play::Update(const sf::Time& dt) {
         return State::Type::Menu;
     }
 
-    if (!m_gameData.map.isEnd() && m_conductor.GetStatus() == sf::SoundSource::Playing) {
+    if (m_conductor.GetStatus() == sf::SoundSource::Playing)
+    {
         m_timer += dt.asSeconds();
         m_conductor.Normalize(m_timer);
     }
-    if (m_gameData.map.isEnd()) {
-        m_timer = m_gameData.map.GetNextPlatform(m_timer).GetTime();
-    }
-    Platform& curPlatform = m_gameData.map.GetNextPlatform(m_timer);
-    m_gameData.square.Update(m_timer, curPlatform);
-    m_camera.Update(dt);
+    int cnt = 1;
+    for (auto& screen: m_gameData.screens)
+    {   
 
+        Platform& curPlatform = screen.map.GetNextPlatform(m_timer);
+        screen.square.Update(m_timer, curPlatform);
+        screen.camera.Update(dt);
+        cnt++;
+    }
     return State::Type::None;
 }
 
 void Play::Render(sf::RenderWindow& window) {
-    m_gameData.map.Render(window, m_camera);
-    m_gameData.square.Render(window);
+    for (auto& screen: m_gameData.screens)
+    {   
+        screen.camera.SetView();
+        screen.map.Render(window);
+        screen.square.Render(window);
+    }
 }
 

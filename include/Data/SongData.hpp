@@ -1,14 +1,20 @@
 #pragma once
 
 #include <vector>
-#include <SFML/Audio.hpp>
+#include <string>
 #include "MidiFile.h"
+#include <SFML/Audio.hpp>
 
+struct SongData 
+{
+    struct Track
+    {
+        std::vector<float> delays;
+        std::vector<unsigned int> notes;
+    };
 
-struct SongData {
     std::string chosenSongName;
     sf::Music music;
     smf::MidiFile midi;
-    std::vector<double> delays;
-    std::vector<unsigned int> notes;
+    std::vector<Track> tracks;
 };

@@ -14,9 +14,11 @@ SongSelection::SongSelection(GameData& data, const InterfaceData& interfaceData)
 }
 
 void SongSelection::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
-    if (event.type == sf::Event::KeyPressed) {
+    if (event.type == sf::Event::KeyPressed) 
+    {
         sf::Keyboard::Key key = event.key.code;
-        switch(key) {
+        switch(key) 
+        {
         case sf::Keyboard::Escape:
             m_exit = true;
             break;
@@ -27,34 +29,40 @@ void SongSelection::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
     }
 }
 
-State::Type SongSelection::Update(const sf::Time& dt) {
+State::Type SongSelection::Update(const sf::Time& dt) 
+{
     State::Type returnValue = State::Type::None;
     returnValue = selectionMenu();
-    if (m_exit) {
+    if (m_exit) 
+    {
         returnValue = State::Type::Menu;
     }
     return returnValue;
 }
 
-void SongSelection::Render(sf::RenderWindow& window) {
+void SongSelection::Render(sf::RenderWindow& window) 
+{
 }
 
-
-void SongSelection::loadSongs() {
-    std::string path = "../resources/songs";
-    if (!std::filesystem::is_directory(std::filesystem::path(path))) {
-        std::cout << "Error: songs folder is not found" << std::endl;
+void SongSelection::loadSongs() 
+{
+    const std::string path = "../../resources/songs";
+    if (!std::filesystem::is_directory(std::filesystem::path(path))) 
+    {
+        std::cerr << "Error: songs folder is not found" << std::endl;
         return;
     }
     
     m_loadedSongs.clear();
-    for (const auto & entry : std::filesystem::directory_iterator(path)) {
+    for (const auto& entry: std::filesystem::directory_iterator(path)) 
+    {
         std::string song = entry.path().filename().string();
         m_loadedSongs.emplace_back(song);
     }
 }
 
-State::Type SongSelection::selectionMenu() {
+State::Type SongSelection::selectionMenu() 
+{
     State::Type returnValue = State::Type::None;
 
     float w = m_interfaceData.workSize.x / 3.f;
@@ -64,9 +72,11 @@ State::Type SongSelection::selectionMenu() {
     float btnY = h / 12.f;
 
     ITools::DefaultWindowBegin({x, y}, {w, h}, 4, "Selection");
-    for (size_t i = 0; i < m_loadedSongs.size(); ++i) {   
-        std::string song = m_loadedSongs[i];
-        if (ImGui::Button(song.c_str(), {-FLT_MIN, btnY})) {
+    for (size_t i = 0; i < m_loadedSongs.size(); ++i) 
+    {   
+        const std::string song = m_loadedSongs[i];
+        if (ImGui::Button(song.c_str(), {-FLT_MIN, btnY})) 
+        {
             m_gameData.songData.chosenSongName = song;
             returnValue =  State::Type::Load;
         }

@@ -15,12 +15,13 @@
 #endif
 
 
-namespace Debug {
-
-namespace Timer {
-void Start();
-void Stop(const std::string& message);
-}
+namespace Debug 
+{
+    namespace Timer 
+    {
+    void Start();
+    void Stop(const std::string& message);
+    }
 
 void LogTime();
 void Log(const std::string& message);

@@ -19,7 +19,6 @@ public:
 private:
     GameData& m_gameData;
     Conductor m_conductor;
-    Camera m_camera;
     float m_timer = 0.f;
     bool m_exit = false;
 };

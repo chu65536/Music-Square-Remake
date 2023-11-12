@@ -17,6 +17,8 @@ public:
     void Render(sf::RenderWindow& window) override;
 
 private:
+    void drawBackground(sf::RenderWindow& window);
+
     GameData& m_gameData;
     Conductor m_conductor;
     float m_timer = 0.f;

@@ -13,20 +13,29 @@ Play::Play(GameData& gameData, const SettingsData& settingsData) :
 void Play::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
     if (event.type == sf::Event::KeyPressed) {
         sf::Keyboard::Key key = event.key.code;
-        switch(key) {
+        switch(key) 
+        {
         case sf::Keyboard::Space:
-            if (m_conductor.GetStatus() != sf::SoundSource::Playing) {
+            if (m_conductor.GetStatus() != sf::SoundSource::Playing) 
+            {
                 m_conductor.Play();
             }
-            else {
+            else 
+            {
                 m_conductor.Pause();
             }
             break;
         case sf::Keyboard::S:
             m_conductor.Stop();
             break;
-        case:: sf::Keyboard::Escape:
+        case::sf::Keyboard::Escape:
             m_exit = true;
+            break;
+        case sf::Keyboard::Right:
+            m_conductor.Move(5.f);
+            break;
+        case sf::Keyboard::Left:
+            m_conductor.Move(-5.f);
             break;
         }
     }
@@ -39,8 +48,10 @@ void Play::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
     // }
 }
 
-State::Type Play::Update(const sf::Time& dt) {
-    if (m_exit) {
+State::Type Play::Update(const sf::Time& dt) 
+{
+    if (m_exit) 
+    {
         m_gameData.Clear();
         return State::Type::Menu;
     }
@@ -53,7 +64,6 @@ State::Type Play::Update(const sf::Time& dt) {
     int cnt = 1;
     for (auto& screen: m_gameData.screens)
     {   
-
         Platform& curPlatform = screen.map.GetNextPlatform(m_timer);
         screen.square.Update(m_timer, curPlatform);
         screen.camera.Update(dt);
@@ -62,12 +72,29 @@ State::Type Play::Update(const sf::Time& dt) {
     return State::Type::None;
 }
 
-void Play::Render(sf::RenderWindow& window) {
+void Play::Render(sf::RenderWindow& window) 
+{
+    //drawBackground(window);
     for (auto& screen: m_gameData.screens)
     {   
         screen.camera.SetView();
-        screen.map.Render(window);
+        screen.map.Render(window, screen.camera);
         screen.square.Render(window);
     }
+}
+
+void Play::drawBackground(sf::RenderWindow& window)
+{
+    sf::RectangleShape rect({5000.f, 5000.f});
+    rect.setOrigin({2500.f, 2500.f});
+    rect.setPosition({0.f, 100000.f});
+    rect.setFillColor(sf::Color::Black);
+    
+    sf::View view = window.getDefaultView();
+    view.setViewport(sf::FloatRect(0.f, 0.f, 1.0f, 1.0f));
+    view.setCenter(0.f, 100000.f);
+
+    //window.setView(view);
+    window.draw(rect);
 }
 

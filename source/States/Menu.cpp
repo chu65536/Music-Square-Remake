@@ -6,12 +6,16 @@
 
 
 Menu::Menu(const InterfaceData& interfaceData) :
-    m_interfaceData(interfaceData) {}
+    m_interfaceData(interfaceData) 
+{}
 
-void Menu::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
-    if (event.type == sf::Event::KeyPressed) {
+void Menu::HandleEvents(sf::RenderWindow& window, sf::Event& event) 
+{
+    if (event.type == sf::Event::KeyPressed) 
+    {
         sf::Keyboard::Key key = event.key.code;
-        switch(key) {
+        switch(key) 
+        {
         case sf::Keyboard::Escape:
             window.close();
             break;
@@ -19,7 +23,8 @@ void Menu::HandleEvents(sf::RenderWindow& window, sf::Event& event) {
     }
 }
 
-State::Type Menu::Update(const sf::Time& dt) {
+State::Type Menu::Update(const sf::Time& dt) 
+{
     State::Type returnValue = mainMenu();
 
     return returnValue;

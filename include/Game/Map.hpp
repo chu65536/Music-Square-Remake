@@ -9,12 +9,23 @@
 #include "Data/SettingsData.hpp"
 #include "Data/SongData.hpp"
 
+struct VectorHash 
+{
+    template<typename T>
+    std::size_t operator()(const sf::Vector2<T>& v) const
+    {
+        return std::hash<T>()(v.x) ^ std::hash<T>()(v.y);
+    }
+};
+
+using GridMap = std::unordered_map<sf::Vector2i, std::vector<sf::RectangleShape>, VectorHash>;
+
 
 class Map 
 {
 public:
     void Init(const SettingsData* settingsData, const SongData::Track* trackData, const sf::Vector2f& startPoint);
-    void Render(sf::RenderWindow& window);
+    void Render(sf::RenderWindow& window, const Camera& cam);
     void Clear();
     const std::vector<Platform>& GetPlatforms() const;
     Platform& GetNextPlatform(float time);
@@ -37,6 +48,8 @@ private:
     bool goBack();
     void addNextPlatform(const Platform& platform);
     sf::RectangleShape makeRectangle(const Platform& platform1, const Platform& platform2);
+    GridMap calcGridMap(std::vector<sf::RectangleShape>& rects);   
+    void makeBackground(); 
 
     const SettingsData* m_dataPt;
     const SongData::Track* m_SongDataPt;
@@ -46,5 +59,6 @@ private:
     std::vector<sf::RectangleShape> m_background;
     std::vector<sf::RectangleShape> m_backgroundCover;
     bool m_failed = false;
-    std::map<std::pair<int, int>, std::vector<Platform*>> m_gridMap;
+    std::vector<GridMap> m_gridMaps;
+    sf::RectangleShape m_backgroundRect;
 };

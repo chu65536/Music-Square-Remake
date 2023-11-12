@@ -46,7 +46,7 @@ void SongSelection::Render(sf::RenderWindow& window)
 
 void SongSelection::loadSongs() 
 {
-    const std::string path = "../../resources/songs";
+    const std::string path = "../resources/songs";
     if (!std::filesystem::is_directory(std::filesystem::path(path))) 
     {
         std::cerr << "Error: songs folder is not found" << std::endl;

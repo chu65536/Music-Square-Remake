@@ -4,7 +4,8 @@
 #include <vector>
 
 
-class SettingsData {
+class SettingsData 
+{
 public:
     void Update();
 
@@ -35,7 +36,7 @@ public:
     bool visiblePlatforms = true;
 
     // system (inaccessible for user)
-    unsigned windowSizeVector[2] {1920u, 1080u};
+    unsigned windowSizeVector[2] {1280u, 720u};
     float chunkSizeVector[2] {500.f, 500.f};
     sf::Vector2f squareSize;
     sf::Vector2f platformSize;

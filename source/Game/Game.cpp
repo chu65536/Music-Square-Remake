@@ -16,7 +16,7 @@ Game::Game()
     m_settingsData.Update();
     sf::ContextSettings windowSettings;
     windowSettings.antialiasingLevel = 8u;
-    m_window.create(sf::VideoMode(m_settingsData.windowSize.x, m_settingsData.windowSize.y), "Music Square Remake", sf::Style::Fullscreen, windowSettings);
+    m_window.create(sf::VideoMode(m_settingsData.windowSize.x, m_settingsData.windowSize.y), "Music Square Remake", sf::Style::Default, windowSettings);
     m_window.setVerticalSyncEnabled(true);
     m_gameData.windowPt = &m_window;
     m_currentState = std::make_unique<Menu>(m_interfaceData);
@@ -32,6 +32,7 @@ void Game::Run()
     {
         handleEvents();
         update();
+        
         render();
     }   
     ImGui::SFML::Shutdown();
@@ -83,10 +84,11 @@ void Game::update()
 
 void Game::render() 
 {
-    m_window.clear(m_settingsData.wallsColor);
+    m_window.clear(sf::Color(0.1f, 0.1f, 0.1f, 1.0f));
     // Reinterpret cast probably??? No additional variable then
     if (m_currentStateType != State::Type::Play && m_currentStateType != State::Type::Load) 
-    {
+    {   
+        m_window.clear(m_settingsData.wallsColor);
         m_backgroundScene.Render(m_window);
     }
     m_currentState->Render(m_window);
@@ -138,7 +140,7 @@ void Game::initImGui() {
     IO.IniFilename = NULL;
     for (size_t i = 1; i <= 10; ++i)
     {
-        IO.Fonts->AddFontFromFileTTF("../../resources/fonts/square-deal.ttf", i * 10);
+        IO.Fonts->AddFontFromFileTTF("../resources/fonts/square-deal.ttf", i * 10);
     }
     if (!ImGui::SFML::UpdateFontTexture()) 
     {

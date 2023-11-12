@@ -22,7 +22,7 @@ void Camera::Update(const sf::Time& dt)
 
 sf::Vector2f Camera::GetSize() const 
 {
-    return (m_size * (1.f / zoom));
+    return sf::Vector2f(m_size.x * m_viewport.width, m_size.y * m_viewport.height);
 }
 
 sf::Vector2f Camera::GetPosition() const 

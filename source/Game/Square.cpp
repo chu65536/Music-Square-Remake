@@ -3,7 +3,8 @@
 #include "Tools/Math.hpp"
 
 
-void Square::Init(const SettingsData& settingsData, const sf::Vector2f& startPoint) {
+void Square::Init(const SettingsData& settingsData, const sf::Vector2f& startPoint) 
+{
     m_speed_ = settingsData.squareSpeed;
     m_position = startPoint;
     m_rect = sf::RectangleShape(settingsData.squareSize);
@@ -15,12 +16,14 @@ void Square::Init(const SettingsData& settingsData, const sf::Vector2f& startPoi
     m_bounds = Math::GetBounds(m_rect);
 }
 
-void Square::Update(float time, Platform& platform) {
+void Square::Update(float time, Platform& platform) 
+{
     m_position = platform.GetPosition();
     float deltaTime = time - platform.GetTime();
     Platform::Direction dir = platform.GetDirection();
     m_speed_ = platform.GetSpeedAfter();
-    switch(dir) {
+    switch(dir) 
+    {
     case Platform::Direction::Up:
         m_speed_.y *= (m_speed_.y < 0 ? -1 : 1);
         break;
@@ -46,7 +49,8 @@ void Square::SetSpeed(const sf::Vector2f& speed) {
     m_speed_ = speed;
 }
 
-const sf::Vector2f* Square::GetPositionRef() const {
+const sf::Vector2f* Square::GetPositionRef() const 
+{
     return &m_position;
 }
 

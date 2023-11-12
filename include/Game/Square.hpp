@@ -7,7 +7,8 @@
 #include "Data/SettingsData.hpp"
 
 
-class Square {
+class Square 
+{
 public:
     void Init(const SettingsData& settingsData, const sf::Vector2f& startPoint);
     void Update (float time, Platform& platform);

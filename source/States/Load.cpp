@@ -8,7 +8,7 @@
 #include "Tools/Debug.hpp"
 #include "Tools/InterfaceTool.hpp"
 
-const std::string songsFolder = "../../resources/songs/";
+const std::string songsFolder = "../resources/songs/";
 
 Load::Load(GameData& gameData, const SettingsData& settingsData, const InterfaceData& interfaceData) :
     m_gameData(gameData),
@@ -59,6 +59,7 @@ void Load::load()
     std::vector<sf::FloatRect> viewports = {q.begin(), q.end()};
 
     sf::Vector2f startPoint(0.f, 0.f);
+    m_gameData.screens.reserve(tracksNum);
     // Thread pool opportunity!!!
     for (size_t i = 0; i < tracksNum; ++i)
     {   
@@ -67,10 +68,9 @@ void Load::load()
         m_gameData.screens[i].square.Init(m_settingsData, startPoint);
         m_gameData.screens[i].map.Init(&m_settingsData, &m_gameData.songData.tracks[i], startPoint);
         m_gameData.screens[i].camera.Init(m_gameData.windowPt, viewports[i], m_gameData.screens[i].square.GetPositionRef(), startPoint, sf::Vector2f(m_settingsData.windowSize));
-
         DEBUG_TIMER_STOP("Map for track " + std::to_string(i) + " generated");
         startPoint.x += 100'000.f;
-    }
+    }   
     m_isLoaded = true;
 }
 
@@ -109,22 +109,27 @@ void Load::makeViewports(unsigned int n, std::deque<sf::FloatRect>& q)
 
     sf::FloatRect cur = q.front();
     q.pop_front();
-
+    
+    float indent = 0.005f;
     sf::FloatRect h1, h2;
     h1 = h2 = cur;
-    if (cur.width >= cur.height)
+    if (cur.width * m_settingsData.windowSize.x >= cur.height * m_settingsData.windowSize.y)
     {   
         h1.width /= 2.f;
+        h1.width -= indent / 2.f;
 
-        h2.left = cur.left + cur.width / 2.f;
+        h2.left = cur.left + indent / 2.f + cur.width / 2.f;
         h2.width /= 2.f;
+        h2.width -= indent;
     }
     else
     {
         h1.height /= 2.f;
+        h1.height -= indent / 2.f;
 
-        h2.top = cur.top + cur.height / 2.f;
+        h2.top = cur.top + indent / 2.f + cur.height / 2.f;
         h2.height /= 2.f;        
+        h2.height -= indent;
     }
 
     q.push_back(h1);

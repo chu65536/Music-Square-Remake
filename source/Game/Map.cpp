@@ -39,6 +39,7 @@ void Map::makePlatforms()
         }
         addNextPlatform(nextPlatform);
     } 
+    makeBackground();
     makeGridMap();
 }
 
@@ -149,24 +150,29 @@ void Map::addBackground() {
     m_backgroundCover.emplace_back(cover);
 }
 
-void Map::Render(sf::RenderWindow& window) 
+void Map::Render(sf::RenderWindow& window, const Camera& cam) 
 {   
-    if (m_dataPt->visiblePlatforms)
+    sf::Vector2f camSz = cam.GetSize();
+    sf::Vector2f camPos = cam.GetPosition(); 
+
+    int l = (camPos.x - camSz.x) / m_dataPt->chunkSize.x;
+    int r = (camPos.x + camSz.x) / m_dataPt->chunkSize.x;
+    int u = (camPos.y - camSz.y) / m_dataPt->chunkSize.y;
+    int d = (camPos.y + camSz.y) / m_dataPt->chunkSize.y;
+
+    window.draw(m_backgroundRect);
+    for (auto& gridMap: m_gridMaps)
     {
-        for (auto& platform: m_platforms)
-        {   
-            platform.Render(window);
+        for (int x = l; x <= r; ++x)
+        {
+            for (int y = u; y <= d; ++y)
+            { 
+                for (auto& rect: gridMap[{x, y}])
+                {
+                    window.draw(rect);
+                }
+            }
         }
-    }
-
-    for (auto back: m_background) 
-    {
-        window.draw(back);
-    }
-
-    for (auto cover: m_backgroundCover) 
-    {
-        window.draw(cover);
     }
 }
 
@@ -175,7 +181,7 @@ void Map::Clear() {
     m_platforms.clear();
     m_background.clear();
     m_backgroundCover.clear();
-    m_gridMap.clear();
+    m_gridMaps.clear();
     m_curPlatform = 0;
 }
 
@@ -183,15 +189,12 @@ const std::vector<Platform>& Map::GetPlatforms() const {
     return m_platforms;
 }
 
-
 Platform& Map::GetNextPlatform(float time) {
     while (m_curPlatform + 1 < m_platforms.size() && time > m_platforms[m_curPlatform + 1].GetTime()) {
         m_curPlatform++;
     }
     return m_platforms[m_curPlatform];
 }
-
-
 
 bool Map::isEnd() const {
     return m_platforms.size() - 1 == m_curPlatform;
@@ -260,30 +263,6 @@ bool Map::goBack() {
     return true;
 }
 
-void Map::makeGridMap() {
-    for (size_t i = 0; i < m_platforms.size(); ++i) {
-        std::vector<sf::Vector2f> bounds = m_platforms[i].GetBounds();
-        float x1, x2, y1, y2;
-        x1 = x2 = bounds[0].x;
-        y1 = y2 = bounds[0].y;
-        for (size_t j = 0; j < bounds.size(); ++j) {
-            x1 = std::min(x1, bounds[j].x);
-            x2 = std::max(x2, bounds[j].x);
-            y1 = std::min(y1, bounds[j].y);
-            y2 = std::max(y2, bounds[j].y);
-        }
-        int l = x1 / m_dataPt->chunkSize.x;
-        int r = x2 / m_dataPt->chunkSize.x;
-        int u = y1 / m_dataPt->chunkSize.y;
-        int d = y2 / m_dataPt->chunkSize.y;
-        for (int x = l; x <= r; ++x) {
-            for (int y = u; y <= d; ++y) {
-                m_gridMap[{x, y}].emplace_back(&m_platforms[i]);
-            }
-        }
-    }
-}
-
 sf::RectangleShape Map::makeRectangle(const Platform& platform1, const Platform& platform2) {
     size_t sz = GetSize();
     sf::Vector2f pos1 = platform1.GetPosition();
@@ -326,6 +305,74 @@ sf::RectangleShape Map::makeRectangle(const Platform& platform1, const Platform&
     sf::RectangleShape rect(sf::Vector2f(w, h));
     rect.setPosition(X, Y);
     return rect;
+}
+
+void Map::makeGridMap() 
+{
+    std::vector<sf::RectangleShape> platformRects;
+    for (auto& platform: m_platforms)
+    {
+        platformRects.emplace_back(platform.GetRect());
+    }
+    m_gridMaps.emplace_back(calcGridMap(platformRects));
+    m_gridMaps.emplace_back(calcGridMap(m_background));
+    m_gridMaps.emplace_back(calcGridMap(m_backgroundCover));
+}
+
+GridMap Map::calcGridMap(std::vector<sf::RectangleShape>& rects)
+{
+    GridMap res;
+    for (auto& rect: rects) 
+    {
+        std::vector<sf::Vector2f> bounds = Math::GetBounds(rect);
+        float x1, x2, y1, y2;
+        x1 = x2 = bounds[0].x;
+        y1 = y2 = bounds[0].y;
+
+        for (size_t j = 0; j < bounds.size(); ++j) 
+        {
+            x1 = std::min(x1, bounds[j].x);
+            x2 = std::max(x2, bounds[j].x);
+            y1 = std::min(y1, bounds[j].y);
+            y2 = std::max(y2, bounds[j].y);
+        }
+
+        int l = x1 / m_dataPt->chunkSize.x;
+        int r = x2 / m_dataPt->chunkSize.x;
+        int u = y1 / m_dataPt->chunkSize.y;
+        int d = y2 / m_dataPt->chunkSize.y;
+        for (int x = l; x <= r; ++x) 
+        {
+            for (int y = u; y <= d; ++y) 
+            {
+                res[{x, y}].emplace_back(rect);    
+            }
+        }
+    }
+    return res;
+}
+
+void Map::makeBackground()
+{
+    float l, r, u, d;
+    l = r = m_startPoint.x;
+    u = d = m_startPoint.y;
+
+    for (auto& platform: m_platforms)
+    {
+        float x = platform.GetPosition().x;
+        float y = platform.GetPosition().y;
+
+        l = std::min(l, x); r = std::max(r, x);
+        u = std::min(u, y); d = std::max(d, y);
+    }
+
+    float w = r - l + m_dataPt->windowSize.x;
+    float h = d - u + m_dataPt->windowSize.y;
+    m_backgroundRect = sf::RectangleShape({w, h});
+    m_backgroundRect.setOrigin(w * 0.5f, h * 0.5f);
+    m_backgroundRect.setPosition({(l + r) * 0.5f, (u + d) * 0.5f});
+    m_backgroundRect.setFillColor(m_dataPt->wallsColor);
 }
 
 

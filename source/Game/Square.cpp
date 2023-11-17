@@ -20,6 +20,7 @@ void Square::Update(float time, Platform& platform)
 {
     m_position = platform.GetPosition();
     float deltaTime = time - platform.GetTime();
+    if (deltaTime < 0.f) return;
     Platform::Direction dir = platform.GetDirection();
     m_speed_ = platform.GetSpeedAfter();
     switch(dir) 

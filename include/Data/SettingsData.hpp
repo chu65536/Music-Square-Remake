@@ -33,7 +33,7 @@ public:
     float backgroundColorVector[3] {1.f, 1.f, 1.f};
 
     bool fpsCounter = false;
-    bool visiblePlatforms = true;
+    bool visiblePlatforms = false;
 
     // system (inaccessible for user)
     unsigned windowSizeVector[2] {1280u, 720u};

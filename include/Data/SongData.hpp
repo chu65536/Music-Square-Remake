@@ -11,6 +11,8 @@ struct SongData
     {
         std::vector<float> delays;
         std::vector<unsigned int> notes;
+        float beginTime;
+        float endTime;
     };
 
     std::string chosenSongName;

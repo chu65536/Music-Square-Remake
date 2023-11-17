@@ -54,9 +54,8 @@ void Load::load()
     Parser::Parse(m_gameData.songData);
 
     int tracksNum = m_gameData.songData.tracks.size();
-    std::deque<sf::FloatRect> q;
-    makeViewports(tracksNum, q);
-    std::vector<sf::FloatRect> viewports = {q.begin(), q.end()};
+    // std::deque<sf::FloatRect> q;
+    // makeViewports(tracksNum, q);
 
     sf::Vector2f startPoint(0.f, 0.f);
     m_gameData.screens.reserve(tracksNum);
@@ -65,9 +64,11 @@ void Load::load()
     {   
         DEBUG_TIMER_START();
         m_gameData.screens.emplace_back(GameData::Screen());
+        m_gameData.screens[i].id = i;
         m_gameData.screens[i].square.Init(m_settingsData, startPoint);
         m_gameData.screens[i].map.Init(&m_settingsData, &m_gameData.songData.tracks[i], startPoint);
-        m_gameData.screens[i].camera.Init(m_gameData.windowPt, viewports[i], m_gameData.screens[i].square.GetPositionRef(), startPoint, sf::Vector2f(m_settingsData.windowSize));
+        m_gameData.screens[i].beginTime = -0.5 + m_gameData.songData.tracks[i].beginTime;
+        m_gameData.screens[i].endTime = 0.5 + m_gameData.songData.tracks[i].endTime;
         DEBUG_TIMER_STOP("Map for track " + std::to_string(i) + " generated");
         startPoint.x += 100'000.f;
     }   

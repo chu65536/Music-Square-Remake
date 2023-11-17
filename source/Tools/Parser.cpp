@@ -25,6 +25,8 @@ void Parser::Parse(SongData& data)
         } 
     }
 
+    std::map<int, SongData::Track> tracksByID; 
+    std::vector<std::pair<float, int>> vec;
     for (int track = 0; track < data.midi.getTrackCount(); ++track)
     {   
         SongData::Track curTrack;
@@ -59,12 +61,19 @@ void Parser::Parse(SongData& data)
             {
                 delay -= normalVal;
             }
-            if (curTrack.delays[0] != 0.f)
-            {
-                curTrack.delays.insert(curTrack.delays.begin(), 0.f);
-            }
-            data.tracks.emplace_back(curTrack);
+
+            curTrack.beginTime = curTrack.delays[0];
+            curTrack.endTime = curTrack.delays[curTrack.delays.size() - 1];
+            tracksByID[track] = curTrack;
+            vec.emplace_back(curTrack.beginTime, track);
         }
     }
+
+    sort(vec.begin(), vec.end());
+    for (auto p: vec)
+    {
+       data.tracks.emplace_back(tracksByID[p.second]); 
+    }
+
     DEBUG_TIMER_STOP("Midi parsed");
 }

@@ -11,6 +11,7 @@ public:
     sf::Vector2f GetPosition() const;
     sf::Vector2f GetSize() const;
     void SetView();
+    void SetViewport(const sf::FloatRect& viewport);
 
     float zoom = 1.f;
     float speed = 5.f;

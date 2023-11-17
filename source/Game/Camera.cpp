@@ -34,3 +34,8 @@ void Camera::SetView()
 {
     m_window->setView(m_view);
 }
+
+void Camera::SetViewport(const sf::FloatRect& viewport)
+{
+    m_viewport = viewport;
+}

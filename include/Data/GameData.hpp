@@ -11,10 +11,14 @@
 struct GameData 
 {
     struct Screen
-    {
+    {   
+        int id;
         Square square;
         Map map;
         Camera camera;
+        float beginTime;
+        float endTime;
+        bool used = false;
     };
     void Clear();
 

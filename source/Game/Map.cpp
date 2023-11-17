@@ -310,11 +310,14 @@ sf::RectangleShape Map::makeRectangle(const Platform& platform1, const Platform&
 void Map::makeGridMap() 
 {
     std::vector<sf::RectangleShape> platformRects;
-    for (auto& platform: m_platforms)
+    if (m_dataPt->visiblePlatforms)
     {
-        platformRects.emplace_back(platform.GetRect());
+        for (auto& platform: m_platforms)
+        {
+            platformRects.emplace_back(platform.GetRect());
+        }
+        m_gridMaps.emplace_back(calcGridMap(platformRects));
     }
-    m_gridMaps.emplace_back(calcGridMap(platformRects));
     m_gridMaps.emplace_back(calcGridMap(m_background));
     m_gridMaps.emplace_back(calcGridMap(m_backgroundCover));
 }

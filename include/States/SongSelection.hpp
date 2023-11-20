@@ -5,7 +5,8 @@
 #include "Data/InterfaceData.hpp"
 
 
-class SongSelection : public State {
+class SongSelection : public State 
+{
 public:
     SongSelection(GameData& data, const InterfaceData& interfaceData);
     State::Type Update(const sf::Time& dt) override;
@@ -15,6 +16,8 @@ public:
 private:
     void loadSongs();
     State::Type selectionMenu();
+    void readAudio();
+
     GameData& m_gameData;
     const InterfaceData& m_interfaceData;
     std::vector<std::string> m_loadedSongs;

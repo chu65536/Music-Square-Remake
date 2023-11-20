@@ -6,6 +6,7 @@
 #include "States/Load.hpp"
 #include "States/Play.hpp"
 #include "States/About.hpp"
+#include "States/MapSelection.hpp"
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "Tools/InterfaceTool.hpp"
@@ -112,6 +113,10 @@ void Game::setState(State::Type type)
         m_currentState = std::make_unique<SongSelection>(m_gameData, m_interfaceData);
         m_currentStateType = State::Type::SongSelection;
         break;
+    case State::Type::MapSelection:
+        m_currentState = std::make_unique<MapSelection>(m_gameData, m_interfaceData);
+        m_currentStateType = State::Type::MapSelection;
+        break;
     case State::Type::Settings:
         m_currentState = std::make_unique<Settings>(m_settingsData, m_interfaceData);
         m_currentStateType = State::Type::Settings;
@@ -131,7 +136,8 @@ void Game::setState(State::Type type)
     }
 }
 
-void Game::initImGui() {
+void Game::initImGui() 
+{
     if (!ImGui::SFML::Init(m_window)) 
     {
         std::cerr << "ImGui-SFML init failed" << std::endl;
@@ -140,7 +146,7 @@ void Game::initImGui() {
     IO.IniFilename = NULL;
     for (size_t i = 1; i <= 10; ++i)
     {
-        IO.Fonts->AddFontFromFileTTF("../resources/fonts/square-deal.ttf", i * 10);
+        IO.Fonts->AddFontFromFileTTF(m_gameData.fontPath.c_str(), i * 10);
     }
     if (!ImGui::SFML::UpdateFontTexture()) 
     {

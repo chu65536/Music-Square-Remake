@@ -67,7 +67,8 @@ FetchContent_MakeAvailable(midifile)
 # Candle
 FetchContent_MakeAvailable(candle)
 
-add_executable(sfml-app 
+add_executable(
+  sfml-app 
   source/main.cpp
   source/Game/Game.cpp
   source/Game/Map.cpp
@@ -82,13 +83,17 @@ add_executable(sfml-app
   source/States/Load.cpp
   source/States/Play.cpp
   source/States/About.cpp
+  source/States/MapSelection.cpp
   source/Tools/Parser.cpp
   source/Tools/Math.cpp
   source/Tools/Debug.cpp
   source/Tools/InterfaceTool.cpp
+  source/Tools/Filesystem.cpp
   source/Data/GameData.cpp
   source/Data/SettingsData.cpp
   source/Data/InterfaceData.cpp
+  source/Game/Screen.cpp
+  source/Game/MapGenerator.cpp
 )
 target_include_directories(
   sfml-app
@@ -97,6 +102,7 @@ target_include_directories(
   ${midifile_SOURCE_DIR}/include
   ${candle_SOURCE_DIR}/include
 )
+
 target_link_libraries(
   sfml-app
   PRIVATE

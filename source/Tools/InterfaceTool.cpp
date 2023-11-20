@@ -10,8 +10,8 @@ void DefaultWindowBegin(ImVec2 pos, ImVec2 sz, unsigned int fontSz, const std::s
     ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove;
 
     ImVec4 backgroundColor(0.1f, 0.1f, 0.1f, 1.f);
-    ImVec4 buttonColor(0.1f, 0.1f, 0.1f, 1.f);
-    ImVec4 buttonHoveredColor(0.3f, 0.3f, 0.3f, 1.f);
+    ImVec4 buttonColor(0.2f, 0.2f, 0.2f, 1.f);
+    ImVec4 buttonHoveredColor(0.4f, 0.4f, 0.4f, 1.f);
     ImVec4 buttonClickedColor(0.6f, 0.6f, 0.6f, 1.f);
     
     ImGui::SetNextWindowPos(pos, ImGuiCond_Always, {0, 0});

@@ -3,39 +3,41 @@
 #include "Tools/Debug.hpp"
 
 
-void Camera::Init(sf::RenderWindow* window, const sf::FloatRect& viewport, const sf::Vector2f* target, const sf::Vector2f& position, const sf::Vector2f& size)
+Camera::Camera(const sf::Vector2f& position, const sf::Vector2f& size) :
+    m_position(position),
+    m_size(size)
 {
-    m_window = window;
-    m_targetPosition = target;
-    m_position = position;
-    m_size = size;
-    m_viewport = viewport;
 }
 
-void Camera::Update(const sf::Time& dt) 
+void Camera::Update(const sf::Time& dt, const sf::Vector2f& newPos) 
 {   
-    m_position = Math::lerp2f(m_position, *m_targetPosition, speed * dt.asSeconds());
-    m_view.setSize(sf::Vector2f(m_size.x * m_viewport.width, m_size.y * m_viewport.height));   
+    m_position = Math::lerp2f(m_position, newPos, speed * dt.asSeconds());
+    m_view.setSize(m_size);   
     m_view.setCenter(m_position);
-    m_view.setViewport(m_viewport);
 }
 
-sf::Vector2f Camera::GetSize() const 
+void Camera::SetView(sf::RenderWindow& window)
 {
-    return sf::Vector2f(m_size.x * m_viewport.width, m_size.y * m_viewport.height);
-}
-
-sf::Vector2f Camera::GetPosition() const 
-{
-    return m_position;
-}
-
-void Camera::SetView()
-{
-    m_window->setView(m_view);
+    window.setView(m_view);
 }
 
 void Camera::SetViewport(const sf::FloatRect& viewport)
 {
-    m_viewport = viewport;
+    m_view.setViewport(viewport);
+    m_view.setSize(m_size.x * viewport.width, m_size.y * viewport.height);
+}
+
+void Camera::SetPosition(const sf::Vector2f& position)
+{
+    m_position = position;
+}
+
+sf::Vector2f Camera::GetPosition() const
+{
+    return m_position;
+}
+
+sf::Vector2f Camera::GetSize() const
+{
+    return m_size;
 }

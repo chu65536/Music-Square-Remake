@@ -4,6 +4,8 @@
 #include "imgui.h"
 #include "imgui-SFML.h"
 #include "Tools/InterfaceTool.hpp"
+#include "Tools/Debug.hpp"
+#include "Tools/Filesystem.hpp"
 
 
 SongSelection::SongSelection(GameData& data, const InterfaceData& interfaceData) :
@@ -71,14 +73,15 @@ State::Type SongSelection::selectionMenu()
     float y = m_interfaceData.workSize.y / 8.f;
     float btnY = h / 12.f;
 
-    ITools::DefaultWindowBegin({x, y}, {w, h}, 4, "Selection");
+    ITools::DefaultWindowBegin({x, y}, {w, h}, 4, "Song Selection");
     for (size_t i = 0; i < m_loadedSongs.size(); ++i) 
     {   
         const std::string song = m_loadedSongs[i];
         if (ImGui::Button(song.c_str(), {-FLT_MIN, btnY})) 
         {
             m_gameData.songData.chosenSongName = song;
-            returnValue =  State::Type::Load;
+            readAudio();
+            returnValue =  State::Type::MapSelection;
         }
     }
     ITools::DefaultWindowEnd();
@@ -91,4 +94,16 @@ State::Type SongSelection::selectionMenu()
     ITools::DefaultWindowEnd();
 
     return returnValue;
+}
+
+void SongSelection::readAudio() 
+{
+    DEBUG_TIMER_START();
+    std::string songPath = m_gameData.songsFolder + m_gameData.songData.chosenSongName;
+    std::string filePath = fs::findAllByExt(songPath, ".ogg").at(0);
+    if (filePath != "") 
+    {
+        m_gameData.songData.music.openFromFile(filePath);
+    }
+    DEBUG_TIMER_STOP("Audio loaded");
 }

@@ -8,7 +8,8 @@
 struct SongData 
 {
     struct Track
-    {
+    {   
+        std::string name = "";
         std::vector<float> delays;
         std::vector<unsigned int> notes;
         float beginTime;

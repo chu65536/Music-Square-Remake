@@ -7,8 +7,12 @@
 #include "Tools/Parser.hpp"
 #include "Tools/Debug.hpp"
 #include "Tools/InterfaceTool.hpp"
+#include "Tools/Filesystem.hpp"
+#include "Game/Screen.hpp"
+#include "Game/MapGenerator.hpp"
+#include <fstream>
+#include "Data/ParsedMapData.hpp"
 
-const std::string songsFolder = "../resources/songs/";
 
 Load::Load(GameData& gameData, const SettingsData& settingsData, const InterfaceData& interfaceData) :
     m_gameData(gameData),
@@ -36,8 +40,9 @@ State::Type Load::Update(const sf::Time& dt)
     updateText();
     loading();
     if(m_isLoaded) 
-    {
-        returnValue = State::Type::Play;
+    {   
+        returnValue = (m_gameData.newMap ? State::Type::MapSelection : State::Type::Play);
+        m_gameData.newMap = false;
         m_loadThread.join();
     }
     return returnValue;
@@ -48,115 +53,51 @@ void Load::Render(sf::RenderWindow& window)
 }
 
 void Load::load() 
-{
-    readAudio();
-    readMidi();
-    Parser::Parse(m_gameData.songData);
-
-    int tracksNum = m_gameData.songData.tracks.size();
-    // std::deque<sf::FloatRect> q;
-    // makeViewports(tracksNum, q);
-
-    sf::Vector2f startPoint(0.f, 0.f);
-    m_gameData.screens.reserve(tracksNum);
-    // Thread pool opportunity!!!
-    for (size_t i = 0; i < tracksNum; ++i)
-    {   
-        DEBUG_TIMER_START();
-        m_gameData.screens.emplace_back(GameData::Screen());
-        m_gameData.screens[i].id = i;
-        m_gameData.screens[i].square.Init(m_settingsData, startPoint);
-        m_gameData.screens[i].map.Init(&m_settingsData, &m_gameData.songData.tracks[i], startPoint);
-        m_gameData.screens[i].beginTime = -0.5 + m_gameData.songData.tracks[i].beginTime;
-        m_gameData.screens[i].endTime = 0.5 + m_gameData.songData.tracks[i].endTime;
-        DEBUG_TIMER_STOP("Map for track " + std::to_string(i) + " generated");
-        startPoint.x += 100'000.f;
-    }   
+{   
+    if (m_gameData.newMap)
+    {
+        readMidi();
+        m_gameData.songData.tracks.clear();
+        Parser::ParseMidi(m_gameData.songData);   
+        makeNewMapFile();
+    }
+    else
+    {
+        ParsedMapData data = Parser::ParseMap(m_gameData.chosenMapPath);
+        // TODO: thread pool
+        for (int track = 0; track < data.tracks.size(); ++track)
+        {
+            makeScreen(data.tracks[track], track);
+        }
+    }
     m_isLoaded = true;
+}
+
+void Load::makeScreen(const ParsedMapData::Track& data, int id)
+{   
+    sf::Vector2f startPoint = data.platforms.at(0).GetPosition();
+    Square square(m_settingsData, startPoint);
+    Map map(m_settingsData, data);
+    Camera camera(startPoint, sf::Vector2f(m_settingsData.windowSize));
+    Screen screen(id, std::move(square), std::move(map), std::move(camera));
+
+    screen.SetViewport({0.f, 0.f, 0.f, 0.f});
+    screen.CalcActiveTime(data.delays);
+    screen.SetName(data.name);
+    screen.SetFont(m_gameData.fontPath);
+    m_gameData.screens.emplace_back(screen);
 }
 
 void Load::readMidi() 
 {
     DEBUG_TIMER_START();
-    std::string songPath = songsFolder + m_gameData.songData.chosenSongName;
-    std::string filePath = findFileByExtension(songPath, ".mid");
+    std::string songPath = m_gameData.songsFolder + m_gameData.songData.chosenSongName;
+    std::string filePath = fs::findAllByExt(songPath, ".mid").at(0);
     if (filePath != "") 
     {
         m_gameData.songData.midi.read(filePath);
     }
     DEBUG_TIMER_STOP("Midi loaded");
-}
-
-void Load::readAudio() 
-{
-    DEBUG_TIMER_START();
-    std::string songPath = songsFolder + m_gameData.songData.chosenSongName;
-    std::string filePath = findFileByExtension(songPath, ".ogg");
-    if (filePath != "") 
-    {
-        m_gameData.songData.music.openFromFile(filePath);
-    }
-    DEBUG_TIMER_STOP("Audio loaded");
-}
-
-void Load::makeViewports(unsigned int n, std::deque<sf::FloatRect>& q)
-{   
-    if (q.empty())
-    {
-        q.emplace_back(0.f, 0.f, 1.f, 1.f);
-        n--;
-    }
-    if (n == 0) return;
-
-    sf::FloatRect cur = q.front();
-    q.pop_front();
-    
-    float indent = 0.005f;
-    sf::FloatRect h1, h2;
-    h1 = h2 = cur;
-    if (cur.width * m_settingsData.windowSize.x >= cur.height * m_settingsData.windowSize.y)
-    {   
-        h1.width /= 2.f;
-        h1.width -= indent / 2.f;
-
-        h2.left = cur.left + indent / 2.f + cur.width / 2.f;
-        h2.width /= 2.f;
-        h2.width -= indent;
-    }
-    else
-    {
-        h1.height /= 2.f;
-        h1.height -= indent / 2.f;
-
-        h2.top = cur.top + indent / 2.f + cur.height / 2.f;
-        h2.height /= 2.f;        
-        h2.height -= indent;
-    }
-
-    q.push_back(h1);
-    q.push_back(h2);
-
-    makeViewports(n - 1, q);
-}
-
-GameData::Screen Load::makeScreen(const sf::FloatRect& viewport, const SongData::Track& track, const sf::Vector2f& startPoint)
-{
-    GameData::Screen screen;
-    return screen;
-}
-
-std::string Load::findFileByExtension(const std::string& path, const std::string& ext) const 
-{
-    for (const auto & entry: std::filesystem::directory_iterator(path)) 
-    {
-        if (entry.path().extension() == ext) 
-        {
-            return entry.path().string();
-        }
-    }
-
-    std::cout << path << ": file with extension " << ext << " is not found" << std::endl;
-    return "";
 }
 
 void Load::updateText() 
@@ -188,4 +129,26 @@ void Load::loading()
     ITools::DefaultWindowBegin({x, y}, {-FLT_MIN, -FLT_MIN}, 6, "Loading");
     ImGui::Text(m_loadingText.c_str());
     ITools::DefaultWindowEnd();
+}
+
+void Load::makeNewMapFile()
+{   
+    std::ofstream file;
+    std::string path = "../resources/songs/" + m_gameData.songData.chosenSongName + "/" + m_gameData.newMapName + ".map";
+    file.open(path);
+    sf::Vector2f startPoint {0, 0};
+    sf::Vector2f sqSz = m_settingsData.squareSize;
+
+    file << "#square_size" << '\n';
+    file << sqSz.x << ' ' << sqSz.y << ' ';
+    file << '\n';
+    for (int track = 0; track < m_gameData.songData.tracks.size(); track++)
+    {   
+        file << "#track " <<  m_gameData.songData.tracks[track].name << '\n';
+        MapGenerator generator(m_settingsData);
+        generator.Generate(m_gameData.songData.tracks[track], startPoint);
+        generator.Export(file);
+        startPoint.x += 100000.f;
+    }
+    file.close();
 }

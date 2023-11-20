@@ -26,7 +26,7 @@ public:
     float platformOutlineColorVector[3] {0.f, 0.f, 0.f};
     int platformOutlineThicknessVal = 4;
 
-    float wallsColorVector[3] {1.f, 1.f,0.f};
+    float wallsColorVector[3] {0.5f, 0.5f, 0.5f};
     float wallsOutlineColorVector[3] {0.f, 0.f, 0.f};
     int wallsOutlineThicknessVal = 4;
 

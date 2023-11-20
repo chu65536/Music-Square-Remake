@@ -4,7 +4,8 @@
 #include "Data/InterfaceData.hpp"
 
 
-class Menu : public State {
+class Menu : public State 
+{
 public:
     Menu(const InterfaceData& interfaceData);
     State::Type Update(const sf::Time& dt) override;

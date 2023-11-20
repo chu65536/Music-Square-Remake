@@ -19,8 +19,10 @@ public:
         sf::Color outlineColor;
         float outlineThickness;
         sf::Vector2f speedBefore;
+        sf::Vector2f speedAfter;
         sf::Vector2f squareSize;
     };
+
     Platform(Data&& data);
     sf::Vector2f GetPosition() const;
     const sf::RectangleShape& GetRect() const;
@@ -33,22 +35,22 @@ public:
     const std::vector<sf::Vector2f>& GetBounds() const;
     void AddCandleBounds(candle::EdgeVector& pool) const;
     void Render(sf::RenderWindow&);
-    void MakeActive();
+    void Export(std::ofstream& file);
 private:
     void setDirection();
-    void setSpeedAfter();
+    void updateSpeedAfter();
     void rotate();
 
-    const Data m_data;
-    const sf::Vector2f m_position;
-    const double m_time;
+    Data m_data;
+    sf::Vector2f m_position;
+    double m_time;
     sf::Vector2f m_size;
     sf::Color m_color;
     sf::Color m_outlineColor;
     float m_outlineThickness;
     Platform::Direction m_direction;
     sf::RectangleShape m_rect;
-    const sf::Vector2f m_speedBefore;
+    sf::Vector2f m_speedBefore;
     sf::Vector2f m_speedAfter;
     std::vector<Direction> m_possibleDirections;
     std::vector<sf::Vector2f> m_bounds;
